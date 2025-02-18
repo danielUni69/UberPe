@@ -15,33 +15,33 @@ class PersonaService
     public function add(Persona $persona)
     {
         $personaModel = new PersonaModel;
-        $personaModel->ci = $persona->ci;
-        $personaModel->nombres = $persona->nombres;
-        $personaModel->apellidos = $persona->apellidos;
-        $personaModel->telefono = $persona->telefono;
-        $personaModel->email = $persona->email;
-        $personaModel->usuario = $persona->usuario;
-        $personaModel->password = $persona->password;
-        $personaModel->rol = $persona->rol;
-        $personaModel->billetera = $persona->billetera;
-        $personaModel->deuda = $persona->deuda;
+        $personaModel->ci = $persona->getCi();
+        $personaModel->nombres = $persona->getNombres();
+        $personaModel->apellidos = $persona->getApellidos();
+        $personaModel->telefono = $persona->getTelefono();
+        $personaModel->email = $persona->getEmail();
+        $personaModel->usuario = $persona->getUsuario();
+        $personaModel->password = $persona->getPassword();
+        $personaModel->rol = $persona->getRol();
+        $personaModel->billetera = $persona->getBilletera();
+        $personaModel->deuda = $persona->getDeuda();
         $personaModel->save();
     }
 
-    public function edit(Persona $persona)
+    public function edit(Persona $persona, $id)
     {
-        $personaModel = PersonaModel::find($persona->id);
+        $personaModel = PersonaModel::find($id);
         if ($personaModel) {
-            $personaModel->ci = $persona->ci;
-            $personaModel->nombres = $persona->nombres;
-            $personaModel->apellidos = $persona->apellidos;
-            $personaModel->telefono = $persona->telefono;
-            $personaModel->email = $persona->email;
-            $personaModel->usuario = $persona->usuario;
-            $personaModel->password = $persona->password;
-            $personaModel->rol = $persona->rol;
-            $personaModel->billetera = $persona->billetera;
-            $personaModel->deuda = $persona->deuda;
+            $personaModel->ci = $persona->getCi();
+            $personaModel->nombres = $persona->getNombres();
+            $personaModel->apellidos = $persona->getApellidos();
+            $personaModel->telefono = $persona->getTelefono();
+            $personaModel->email = $persona->getEmail();
+            $personaModel->usuario = $persona->getUsuario();
+            $personaModel->password = $persona->getPassword();
+            $personaModel->rol = $persona->getRol();
+            $personaModel->billetera = $persona->getBilletera();
+            $personaModel->deuda = $persona->getDeuda();
             $personaModel->save();
         }
     }

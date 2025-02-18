@@ -4,25 +4,16 @@ namespace App\Core;
 
 class Persona
 {
-    public $ci;
-
-    public $nombres;
-
-    public $apellidos;
-
-    public $telefono;
-
-    public $email;
-
-    public $usuario;
-
-    public $password;
-
-    public $rol;
-
-    public $billetera;
-
-    public $deuda;
+    private $ci;
+    private $nombres;
+    private $apellidos;
+    private $telefono;
+    private $email;
+    private $usuario;
+    private $password;
+    private $rol;
+    private $billetera;
+    private $deuda;
 
     public function __construct($ci, $nombres, $apellidos, $telefono, $email, $usuario, $password, $rol, $billetera)
     {
@@ -37,4 +28,23 @@ class Persona
         $this->billetera = $billetera;
         $this->deuda = 0;
     }
+
+    public function getCi() { return $this->ci; }
+    public function getNombres() { return $this->nombres; }
+    public function getApellidos() { return $this->apellidos; }
+    public function getTelefono() { return $this->telefono; }
+    public function getEmail() { return $this->email; }
+    public function getUsuario() { return $this->usuario; }
+    public function getPassword() { return $this->password; }
+    public function getRol() { return $this->rol; }
+    public function getBilletera() { return $this->billetera; }
+    public function getDeuda() { return $this->deuda; }
+
+    public function setTelefono($telefono) { $this->telefono = $telefono; }
+    public function setEmail($email) { $this->email = $email; }
+    public function setUsuario($usuario) { $this->usuario = $usuario; }
+    public function setPassword($password) { $this->password = $password; }
+    public function setRol($rol) { $this->rol = $rol; }
+    public function setBilletera($billetera) { $this->billetera = $billetera; }
+    public function setDeuda($deuda) { $this->deuda = $deuda; }
 }

@@ -23,9 +23,9 @@ class ListaPersona
         $this->service->add($persona);
     }
 
-    public function edit(Persona $persona)
+    public function edit(Persona $persona, $id)
     {
-        $this->service->edit($persona);
+        $this->service->edit($persona, $id);
     }
 
     public function iniciarSesion($usuario, $password)
