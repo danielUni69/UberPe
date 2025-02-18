@@ -8,16 +8,16 @@ use Illuminate\Http\Request;
 
 class PersonaController extends Controller
 {
-    private ListaPersona $personas;
+    private ListaPersona $listaPersona;
 
     public function __construct()
     {
-        $this->personas = new ListaPersona;
+        $this->listaPersona = new ListaPersona;
     }
 
     public function index()
     {
-        $personas = $this->personas->list();
+        $personas = $this->listaPersona->list();
         dd($personas, $personas[0]->convertToPersona());
         // return view('personas.index', compact('personas'));
     }

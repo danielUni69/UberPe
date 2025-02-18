@@ -4,12 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreatePersonasTable extends Migration
+return new class extends Migration
 {
     public function up()
     {
-        Schema::create('personas', function (Blueprint $table) {
-            $table->id();
+        Schema::create('persona', function (Blueprint $table) {
+            $table->id('id_persona'); // Clave primaria
             $table->string('ci')->unique();
             $table->string('nombres');
             $table->string('apellidos');
@@ -17,17 +17,15 @@ class CreatePersonasTable extends Migration
             $table->string('email')->unique();
             $table->string('usuario')->unique();
             $table->string('password');
-            $table->enum('rol', ['Pasajero', 'Conductor', 'Administrador']);
-            $table->float('billetera')->default(0);
-            $table->float('deuda')->default(0);
-            $table->string('licencia')->nullable();
-            $table->boolean('disponible')->default(false);
+            $table->decimal('billetera', 10, 2)->default(0);
+            $table->decimal('deuda', 10, 2)->default(0);
+            $table->enum('rol', ['Administrador', 'Conductor', 'Pasajero']);
             $table->timestamps();
         });
     }
 
     public function down()
     {
-        Schema::dropIfExists('personas');
+        Schema::dropIfExists('persona');
     }
-}
+};
