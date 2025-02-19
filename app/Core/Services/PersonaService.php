@@ -4,6 +4,10 @@ namespace App\Core\Services;
 
 use App\Core\Persona;
 use App\Models\PersonaModel;
+use App\Models\Viaje;
+use App\Models\ViajeModel;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 
 class PersonaService
 {
@@ -12,6 +16,11 @@ class PersonaService
         return PersonaModel::all();
     }
 
+    /**
+     * Crea un nuevo usuario y encripta la contraseña.
+     *
+     * @return PersonaModel
+     */
     public function add(Persona $persona)
     {
         $personaModel = new PersonaModel;
@@ -21,39 +30,83 @@ class PersonaService
         $personaModel->telefono = $persona->getTelefono();
         $personaModel->email = $persona->getEmail();
         $personaModel->usuario = $persona->getUsuario();
-        $personaModel->password = $persona->getPassword();
+        $personaModel->password = Hash::make($persona->getPassword()); // Encriptar la contraseña
         $personaModel->rol = $persona->getRol();
         $personaModel->billetera = $persona->getBilletera();
         $personaModel->deuda = $persona->getDeuda();
         $personaModel->save();
+
+        return $personaModel;
     }
 
-    public function edit(Persona $persona, $id)
+    /**
+     * Edita una persona existente.
+     *
+     * @param  int  $id
+     * @return PersonaModel
+     */
+    public function editarPersona($id, Persona $persona)
     {
+        // Buscar la persona por su ID
         $personaModel = PersonaModel::find($id);
+
         if ($personaModel) {
+            // Actualizar los campos
             $personaModel->ci = $persona->getCi();
             $personaModel->nombres = $persona->getNombres();
             $personaModel->apellidos = $persona->getApellidos();
             $personaModel->telefono = $persona->getTelefono();
             $personaModel->email = $persona->getEmail();
             $personaModel->usuario = $persona->getUsuario();
-            $personaModel->password = $persona->getPassword();
+
+            // Si se proporciona una nueva contraseña, se encripta
+            if ($persona->getPassword()) {
+                $personaModel->password = Hash::make($persona->getPassword());
+            }
+
             $personaModel->rol = $persona->getRol();
             $personaModel->billetera = $persona->getBilletera();
             $personaModel->deuda = $persona->getDeuda();
             $personaModel->save();
+
+            return $personaModel;
         }
+
+        throw new \Exception('Persona no encontrada.');
     }
 
+    /**
+     * Inicia sesión y almacena el usuario en la sesión con Auth.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function iniciarSesion($usuario, $password)
     {
-        $personaModel = PersonaModel::where('usuario', $usuario)->where('password', $password)->first();
-        if ($personaModel) {
-            return $personaModel->convertToPersona();
+        if (Auth::attempt(['usuario' => $usuario, 'password' => $password])) {
+            $user = Auth::user();
+            session(['rol' => $user->rol]); // Guardar el rol en sesión
+
+            return response()->json([
+                'mensaje' => 'Inicio de sesión exitoso',
+                'usuario' => $user,
+            ], 200);
         }
 
-        return null;
+        return response()->json(['mensaje' => 'Credenciales incorrectas'], 401);
+    }
+
+    /**
+     * Cierra la sesión del usuario.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function cerrarSesion()
+    {
+        Auth::logout(); // Cierra la sesión del usuario
+
+        session()->forget('rol'); // Opcional: eliminar el rol de la sesión
+
+        return response()->json(['mensaje' => 'Sesión cerrada correctamente'], 200);
     }
 
     public function verBilletera($id)
@@ -77,5 +130,83 @@ class PersonaService
         }
 
         return null;
+    }
+
+    /**
+     * Obtiene una persona por su ID.
+     *
+     * @param  int  $id
+     * @return PersonaModel|null
+     */
+    public function getPersona($id)
+    {
+        return PersonaModel::find($id);
+    }
+
+    public function cancelarViaje()
+    {
+        $user = Auth::user();
+        $rol = session('rol') ?? $user->rol; // Asegurar que siempre haya un rol válido
+
+        if (! in_array($rol, ['Pasajero', 'Conductor'])) {
+            return response()->json(['mensaje' => 'No tienes permisos para cancelar viajes.'], 403);
+        }
+
+        $viaje = ViajeModel::where(function ($query) use ($user, $rol) {
+            if ($rol === 'pasajero') {
+                $query->where('pasajero_id', $user->id_persona);
+            } elseif ($rol === 'conductor') {
+                $query->where('conductor_id', $user->id_persona);
+            }
+        })
+            ->whereIn('estado', ['En curso', 'Pendiente'])
+            ->first();
+
+        if (! $viaje) {
+            return response()->json(['mensaje' => 'No tienes viajes activos para cancelar.'], 400);
+        }
+
+        if (in_array($viaje->metodo_pago, ['Billetera', 'Tarjeta'])) {
+            if ($rol === 'pasajero') {
+                if ($viaje->conductor) {
+                    $comision = $viaje->saldo_bloqueado * 0.1; // 10% de comisión para el conductor
+                    $montoDevuelto = $viaje->saldo_bloqueado - $comision; // 90% que se devuelve al pasajero
+
+                    // Incrementar el saldo del conductor con la comisión
+                    $viaje->conductor->increment('billetera', $comision);
+
+                    // Devolver el 90% al saldo del pasajero
+
+                    $user->billetera = (float) $montoDevuelto;
+                    // Marcar al conductor como disponible
+                    $viaje->conductor->update(['disponible' => true]);
+                } else {
+                    $user->increment('billetera', $viaje->saldo_bloqueado);
+                }
+                $viaje->estado = 'Cancelado por el pasajero';
+
+            } elseif ($rol === 'conductor') {
+                if ($viaje->pasajero) {
+                    $viaje->pasajero->increment('billetera', $viaje->saldo_bloqueado); // Reembolso completo
+                }
+                $viaje->estado = 'Cancelado por el conductor';
+                $viaje->conductor->update(['disponible' => true]);
+            }
+        } else {
+            // Si el pago es en efectivo, solo cancelamos el viaje
+            if ($rol === 'conductor') {
+                $viaje->conductor->update(['disponible' => true]);
+            }
+            $viaje->estado = 'Cancelado por el pasajero';
+        }
+
+        // Resetear saldo bloqueado y guardar cambios
+        $viaje->saldo_bloqueado = 0;
+        $viaje->save();
+
+        return response()->json([
+            'mensaje' => 'Viaje cancelado exitosamente.',
+            'estado' => $viaje->estado,
+        ], 200);
     }
 }

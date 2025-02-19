@@ -28,9 +28,24 @@ class ListaPersona
         $this->service->edit($persona, $id);
     }
 
+    /**
+     * Inicia sesión.
+     *
+     * @param  string  $usuario
+     * @param  string  $password
+     * @return bool
+     */
     public function iniciarSesion($usuario, $password)
     {
         return $this->service->iniciarSesion($usuario, $password);
+    }
+
+    /**
+     * Cierra la sesión.
+     */
+    public function cerrarSesion()
+    {
+        $this->service->cerrarSesion();
     }
 
     public function verBilletera($id)
@@ -41,5 +56,21 @@ class ListaPersona
     public function recargarBilletera($id, $monto)
     {
         return $this->service->recargarBilletera($id, $monto);
+    }
+
+    public function cancelarViaje()
+    {
+        return $this->service->cancelarViaje();
+    }
+
+    /**
+     * Obtiene una persona por su ID.
+     *
+     * @param  int  $id
+     * @return PersonaModel|null
+     */
+    public function getPersona($id)
+    {
+        return $this->service->getPersona($id);
     }
 }

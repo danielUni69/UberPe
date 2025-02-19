@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Core\Conductor;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -39,5 +40,28 @@ class ConductorModel extends Model
     public function calificaciones()
     {
         return $this->hasMany(CalificacionConductorModel::class, 'conductor_id', 'id_conductor');
+    }
+
+    public function convertToConductor(): Conductor
+    {
+        $persona = $this->persona;
+
+        if (! $persona) {
+            throw new \Exception('No se encontró la persona asociada al conductor.');
+        }
+
+        return new Conductor(
+            $persona->ci,
+            $persona->nombres,
+            $persona->apellidos,
+            $persona->telefono,
+            $persona->email,
+            $persona->usuario,
+            $persona->password,
+            $persona->rol,
+            $persona->billetera,
+            $this->licencia,
+            $this->disponible
+        );
     }
 }

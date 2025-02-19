@@ -22,35 +22,61 @@ class PersonaController extends Controller
         // return view('personas.index', compact('personas'));
     }
 
-    public function store(Request $request)
+    /**
+     * Crea un nuevo usuario.
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function crearUsuario(Request $request)
     {
         $persona = new Persona(
-            $request->ci,
-            $request->nombres,
-            $request->apellidos,
-            $request->telefono,
-            $request->email,
-            $request->usuario,
-            $request->password,
-            $request->rol,
-            $request->billetera,
-            $request->deuda
+            $request->input('ci'),
+            $request->input('nombres'),
+            $request->input('apellidos'),
+            $request->input('telefono'),
+            $request->input('email'),
+            $request->input('usuario'),
+            $request->input('password'),
+            $request->input('rol'),
+            $request->input('billetera')
         );
+
         $this->listaPersona->add($persona);
 
-        return redirect()->route('personas.index');
+        // return redirect()->route('')->with('success', 'Usuario creado exitosamente.');
     }
 
-    public function iniciarSesion(Request $request)
+    /**
+     * Inicia sesión.
+     * $request
+     *
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function login(Request $request)
     {
-        $usuario = $request->usuario;
-        $password = $request->password;
-        $persona = $this->listaPersona->iniciarSesion($usuario, $password);
-        if ($persona) {
-            return response()->json(['success' => true, 'persona' => $persona]);
+        $usuario = $request->input('usuario');
+        $password = $request->input('password');
+
+        if ($this->listaPersona->iniciarSesion($usuario, $password)) {
+            return redirect()->route('dashboard')->with('success', 'Inicio de sesión exitoso.');
         }
 
-        return response()->json(['success' => false, 'message' => 'Credenciales incorrectas']);
+        return back()->withErrors(['error' => 'Credenciales incorrectas.']);
+    }
+
+    public function cancelarViaje()
+    {
+        $this->listaPersona->cancelarViaje();
+    }
+
+    /**
+     * Cierra la sesión.
+        */
+    public function logout()
+    {
+        $this->listaPersona->cerrarSesion();
+
+        return redirect()->route('login')->with('success', 'Sesión cerrada correctamente.');
     }
 
     public function verBilletera($id)
