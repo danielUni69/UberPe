@@ -6,8 +6,10 @@ use App\Core\Conductor;
 use App\Models\CalificacionConductorModel;
 use App\Models\ConductorModel;
 use App\Models\Pago;
+use App\Models\PagoModel;
 use App\Models\PersonaModel;
 use App\Models\Viaje;
+use App\Models\ViajeModel;
 use illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -111,7 +113,7 @@ class ConductorService
             return response()->json(['mensaje' => 'Solo los conductores pueden ver los viajes pendientes.'], 403);
         }
 
-        $viajes = Viaje::where('estado', 'Pendiente')->get();
+        $viajes = ViajeModel::where('estado', 'Pendiente')->get();
 
         return response()->json($viajes);
     }
@@ -124,7 +126,7 @@ class ConductorService
             return response()->json(['mensaje' => 'Solo los conductores pueden aceptar un viaje.'], 403);
         }
 
-        $viaje = Viaje::where('id', $viajeId)->where('estado', 'Pendiente')->first();
+        $viaje = ViajeModel::where('id', $viajeId)->where('estado', 'Pendiente')->first();
 
         if (! $viaje) {
             return response()->json(['mensaje' => 'Viaje no disponible.'], 404);
@@ -147,7 +149,7 @@ class ConductorService
         }
 
         // Buscar un viaje en curso asignado al conductor
-        $viaje = Viaje::where('conductor_id', $conductor->id)
+        $viaje = ViajeModel::where('conductor_id', $conductor->id)
             ->where('estado', 'En curso')
             ->first();
 
@@ -183,26 +185,6 @@ class ConductorService
             $viaje->saldo_bloqueado = 0;
             $viaje->save();
         });
-  SQLSTATE[23514]: Check violation: 7 ERROR:  new row for relation "persona" violates check constraint "persona_rol_check"
-DETAIL:  Failing row contains (1, 9789171, Celestine, Olson, (361) 499-6440, kari20@example.com, wthompson, $2y$04$FWtajN3fbjoOy30Cl7pIKe2ZjKzae.t8aSL6rpsRWkhyMfZe8/u8a, 100.00, 0.00, pasajero, 2025-02-19 16:37:23, 2025-02-19 16:37:23). (Connection: pgsql, SQL: insert into "persona" ("ci", "nombres", "apellidos", "telefono", "email", "usuario", "password", "rol", "billetera", "deuda", "updated_at", "created_at") values (9789171, Celestine, Olson, (361) 499-6440, kari20@example.com, wthompson, $2y$04$FWtajN3fbjoOy30Cl7pIKe2ZjKzae.t8aSL6rpsRWkhyMfZe8/u8a, pasajero, 100, 0, 2025-02-19 16:37:23, 2025-02-19 16:37:23) returning "id_persona")
-
-  at vendor/laravel/framework/src/Illuminate/Database/Connection.php:825
-    821▕                     $this->getName(), $query, $this->prepareBindings($bindings), $e
-    822▕                 );
-    823▕             }
-    824▕
-  ➜ 825▕             throw new QueryException(
-    826▕                 $this->getName(), $query, $this->prepareBindings($bindings), $e
-    827▕             );
-    828▕         }
-    829▕     }
-
-      +18 vendor frames
-  19  tests/Feature/PersonaTest.php:66
-
-
-  Tests:    2 failed, 3 passed (3 assertions)
-  Duration: 0.60s        });
 
         return response()->json(['mensaje' => 'Viaje finalizado correctamente.']);
     }
@@ -216,7 +198,7 @@ DETAIL:  Failing row contains (1, 9789171, Celestine, Olson, (361) 499-6440, kar
         }
 
         // Obtener el viaje con estado "Viaje completado sin confirmar pago"
-        $viaje = Viaje::where('conductor_id', $conductor->id)
+        $viaje = ViajeModel::where('conductor_id', $conductor->id)
             ->where('estado', 'Viaje completado sin confirmar pago')
             ->first();
 
@@ -235,7 +217,7 @@ DETAIL:  Failing row contains (1, 9789171, Celestine, Olson, (361) 499-6440, kar
             $viaje->save(); // Guardar los cambios del viaje
 
             // Crear el pago registrado
-            Pago::create([
+            PagoModel::create([
                 'viaje_id' => $viaje->id,
                 'monto_total' => $viaje->tarifa,
                 'comision' => $comision,
@@ -268,7 +250,7 @@ DETAIL:  Failing row contains (1, 9789171, Celestine, Olson, (361) 499-6440, kar
     {
         $conductor = Auth::user(); // Obtener el conductor autenticado
 
-        $viajes = Viaje::where('conductor_id', $conductor->id)->get(); // Obtener los viajes del conductor
+        $viajes = ViajeModel::where('conductor_id', $conductor->id)->get(); // Obtener los viajes del conductor
         if ($viajes->isEmpty()) {
             return response()->json(['mensaje' => 'No tienes viajes registrados.'], 404);
         }

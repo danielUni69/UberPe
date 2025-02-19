@@ -3,6 +3,8 @@
 namespace App\Core;
 
 use App\Core\Services\PersonaService;
+use App\Core\Validations\PersonaValidation;
+use Illuminate\Validation\ValidationException;
 
 class ListaPersona
 {
@@ -10,6 +12,7 @@ class ListaPersona
 
     public function __construct()
     {
+
         $this->service = new PersonaService;
     }
 
@@ -20,11 +23,50 @@ class ListaPersona
 
     public function add(Persona $persona)
     {
+        $data = [
+            'ci' => $persona->getCi(),
+            'nombres' => $persona->getNombres(),
+            'apellidos' => $persona->getApellidos(),
+            'telefono' => $persona->getTelefono(),
+            'email' => $persona->getEmail(),
+            'usuario' => $persona->getUsuario(),
+            'password' => $persona->getPassword(),
+            'rol' => $persona->getRol(),
+            'billetera' => $persona->getBilletera(),
+            'deuda' => $persona->getDeuda(),
+        ];
+
+        $validator = PersonaValidation::validateAdd($data);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
         $this->service->add($persona);
     }
 
     public function edit(Persona $persona, $id)
     {
+
+        $data = [
+            'ci' => $persona->getCi(),
+            'nombres' => $persona->getNombres(),
+            'apellidos' => $persona->getApellidos(),
+            'telefono' => $persona->getTelefono(),
+            'email' => $persona->getEmail(),
+            'usuario' => $persona->getUsuario(),
+            'password' => $persona->getPassword(),
+            'rol' => $persona->getRol(),
+            'billetera' => $persona->getBilletera(),
+            'deuda' => $persona->getDeuda(),
+        ];
+
+        $validator = PersonaValidation::validateEdit($data, $id);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
         $this->service->edit($persona, $id);
     }
 
@@ -37,6 +79,18 @@ class ListaPersona
      */
     public function iniciarSesion($usuario, $password)
     {
+
+        $data = [
+            'usuario' => $usuario,
+            'password' => $password,
+        ];
+
+        $validator = PersonaValidation::validateLogin($data);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
         return $this->service->iniciarSesion($usuario, $password);
     }
 
@@ -55,6 +109,17 @@ class ListaPersona
 
     public function recargarBilletera($id, $monto)
     {
+
+        $data = [
+            'monto' => $monto,
+        ];
+
+        $validator = PersonaValidation::validateRecargarBilletera($data);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }
+
         return $this->service->recargarBilletera($id, $monto);
     }
 
