@@ -8,6 +8,7 @@ use App\Models\Viaje;
 use App\Models\ViajeModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class PersonaService
 {
@@ -146,6 +147,7 @@ class PersonaService
     public function cancelarViaje()
     {
         $user = Auth::user();
+        
         $rol = session('rol') ?? $user->rol; // Asegurar que siempre haya un rol válido
 
         if (! in_array($rol, ['Pasajero', 'Conductor'])) {
@@ -165,27 +167,28 @@ class PersonaService
         if (! $viaje) {
             return response()->json(['mensaje' => 'No tienes viajes activos para cancelar.'], 400);
         }
-
-        if (in_array($viaje->metodo_pago, ['Billetera', 'Tarjeta'])) {
-            if ($rol === 'pasajero') {
+        dd($user);
+        if (in_array($viaje->metodo, ['Billetera', 'Tarjeta'])) {
+            if ($rol === 'Pasajero') {
                 if ($viaje->conductor) {
                     $comision = $viaje->saldo_bloqueado * 0.1; // 10% de comisión para el conductor
                     $montoDevuelto = $viaje->saldo_bloqueado - $comision; // 90% que se devuelve al pasajero
-
                     // Incrementar el saldo del conductor con la comisión
-                    $viaje->conductor->increment('billetera', $comision);
-
+                    $viaje->conductor->persona->billetera += $comision; 
+                    
+                    //dd($viaje->conductor->persona->billetera);
                     // Devolver el 90% al saldo del pasajero
-
-                    $user->billetera = (float) $montoDevuelto;
+                    dd($user->billetera);
+                    $user->billetera -= $montoDevuelto;
                     // Marcar al conductor como disponible
                     $viaje->conductor->update(['disponible' => true]);
                 } else {
-                    $user->increment('billetera', $viaje->saldo_bloqueado);
+                    $user = $viaje->saldo_bloqueado;
                 }
                 $viaje->estado = 'Cancelado por el pasajero';
 
             } elseif ($rol === 'conductor') {
+                dd('Hola conductor');
                 if ($viaje->pasajero) {
                     $viaje->pasajero->increment('billetera', $viaje->saldo_bloqueado); // Reembolso completo
                 }
@@ -199,10 +202,10 @@ class PersonaService
             }
             $viaje->estado = 'Cancelado por el pasajero';
         }
-
         // Resetear saldo bloqueado y guardar cambios
         $viaje->saldo_bloqueado = 0;
         $viaje->save();
+       
 
         return response()->json([
             'mensaje' => 'Viaje cancelado exitosamente.',
