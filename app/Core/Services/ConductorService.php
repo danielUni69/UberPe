@@ -8,10 +8,11 @@ use App\Models\ConductorModel;
 use App\Models\Pago;
 use App\Models\PagoModel;
 use App\Models\PersonaModel;
-use App\Models\Viaje;
+
 use App\Models\ViajeModel;
-use illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class ConductorService
 {
@@ -109,7 +110,8 @@ class ConductorService
 
     public function viajesPendientes()
     {
-        if (session('rol') !== 'conductor') {
+        $user = Auth::user();
+        if ($user->rol !== 'Conductor') {
             return response()->json(['mensaje' => 'Solo los conductores pueden ver los viajes pendientes.'], 403);
         }
 
@@ -121,12 +123,11 @@ class ConductorService
     public function aceptarViaje($viajeId)
     {
         $user = Auth::user();
-
-        if (session('rol') !== 'conductor') {
+        if ($user->rol === 'Pasajero') {
             return response()->json(['mensaje' => 'Solo los conductores pueden aceptar un viaje.'], 403);
         }
 
-        $viaje = ViajeModel::where('id', $viajeId)->where('estado', 'Pendiente')->first();
+        $viaje = ViajeModel::where('id_viaje', $viajeId)->where('estado', 'Pendiente')->first();
 
         if (! $viaje) {
             return response()->json(['mensaje' => 'Viaje no disponible.'], 404);
@@ -142,14 +143,13 @@ class ConductorService
 
     public function finalizarViaje()
     {
-        $conductor = Auth::user();
-
-        if (session('rol') !== 'conductor') {
+        $persona = Auth::user();
+ 
+        if ($persona->rol !== 'Conductor') {
             return response()->json(['mensaje' => 'Solo los conductores pueden finalizar viajes.'], 403);
         }
-
         // Buscar un viaje en curso asignado al conductor
-        $viaje = ViajeModel::where('conductor_id', $conductor->id)
+        $viaje = ViajeModel::where('conductor_id', $persona->conductor->id_conductor)
             ->where('estado', 'En curso')
             ->first();
 
@@ -157,28 +157,29 @@ class ConductorService
             return response()->json(['mensaje' => 'No hay viajes en curso.'], 404);
         }
 
-        DB::transaction(function () use ($viaje, $conductor) {
+        DB::transaction(function () use ($viaje, $persona ) {
             $pasajero = $viaje->pasajero;
             $comision = $viaje->tarifa * 0.1; // Comisión del 10%
             $monto_conductor = $viaje->tarifa - $comision; // Ganancia del conductor
 
             // Registrar el pago del viaje
-            Pago::create([
-                'viaje_id' => $viaje->id,
+            PagoModel::create([
+                'viaje_id' => $viaje->id_viaje,
                 'monto_total' => $viaje->tarifa,
                 'comision' => $comision,
                 'monto_conductor' => $monto_conductor,
                 'fecha' => now(),
             ]);
 
-            if ($viaje->metodo_pago === 'Efectivo') {
+            if ($viaje->metodo === 'Efectivo') {
                 // En efectivo, el pago queda pendiente de confirmación
-                $viaje->estado = 'Viaje completado sin confirmar pago';
+                $viaje->estado = 'Viaje pagado sin confirmar por el conductor';
             } else {
                 // Pagos con Billetera o Tarjeta
-                $conductor->increment('billetera', $monto_conductor); // Se paga al conductor
-                $viaje->estado = 'Completado y pagado';
+                $persona->increment('billetera', $monto_conductor); // Se paga al conductor
+                $viaje->estado = 'Completado';
                 $pasajero->decrement('billetera', $viaje->tarifa); // Descontar del pasajero
+                $persona->conductor->disponible = true; // Liberar al conductor
             }
 
             // Liberar saldo bloqueado
@@ -191,15 +192,15 @@ class ConductorService
 
     public function confirmarPago()
     {
-        $conductor = Auth::user(); // Obtener el usuario autenticado (que es un conductor)
+        $persona = Auth::user(); // Obtener el usuario autenticado (que es un conductor)
 
-        if (session('rol') !== 'conductor') {
+        if ($persona->rol !== 'Conductor') {
             return response()->json(['mensaje' => 'Solo los conductores pueden confirmar pagos.'], 403);
         }
 
         // Obtener el viaje con estado "Viaje completado sin confirmar pago"
-        $viaje = ViajeModel::where('conductor_id', $conductor->id)
-            ->where('estado', 'Viaje completado sin confirmar pago')
+        $viaje = ViajeModel::where('conductor_id', $persona->condutor->id_conductor)
+            ->where('estado', 'Viaje pagado sin confirmar por el conductor')
             ->first();
 
         if (! $viaje) {
@@ -210,15 +211,15 @@ class ConductorService
         $monto_conductor = $viaje->tarifa - $comision;
 
         // Verificar si el conductor tiene saldo suficiente para la comisión
-        if ($conductor->billetera >= $comision) {
-            $conductor->decrement('billetera', $comision); // Restar la comisión del saldo del conductor
+        if ($persona->billetera >= $comision) {
+            $persona->decrement('billetera', $comision); // Restar la comisión del saldo del conductor
             $viaje->estado = 'Completado'; // Cambiar el estado del viaje
-            $conductor->disponible = true; // Liberar al conductor
+            $persona->conductor->disponible = true; // Liberar al conductor
             $viaje->save(); // Guardar los cambios del viaje
 
             // Crear el pago registrado
             PagoModel::create([
-                'viaje_id' => $viaje->id,
+                'viaje_id' => $viaje->id_viaje,
                 'monto_total' => $viaje->tarifa,
                 'comision' => $comision,
                 'monto_conductor' => $monto_conductor,

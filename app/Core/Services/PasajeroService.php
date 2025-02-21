@@ -128,11 +128,11 @@ class PasajeroService
     {
         $user = Auth::user();
 
-        if (session('rol') !== 'pasajero') {
+        if ($user->rol !== 'Pasajero') {
             return response()->json(['mensaje' => 'Solo los pasajeros pueden ver su historial.'], 403);
         }
 
-        $viajes = ViajeModel::where('pasajero_id', $user->id)->get();
+        $viajes = ViajeModel::where('pasajero_id', $user->id_pasajero)->get();
 
         return response()->json(['historial' => $viajes]);
     }

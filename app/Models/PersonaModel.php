@@ -39,4 +39,8 @@ class PersonaModel extends Authenticatable
             $this->deuda
         );
     }
+    public function conductor()
+    {
+        return $this->hasOne(ConductorModel::class, 'persona_id');
+    }
 }
