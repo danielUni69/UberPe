@@ -14,31 +14,36 @@ class PasajeroService
     public function solicitarServicio($origen, $destino, $metodo_pago, $tarifa)
     {
         $user = Auth::user();
+
+        // Verificar que el usuario sea una instancia de PersonaModel
         if (! $user instanceof PersonaModel) {
             throw new \Exception('El usuario no es una instancia de PersonaModel.');
         }
+
+        // Verificar si hay conductores disponibles
         $conductorDisponible = ConductorModel::where('disponible', true)->first();
-
         if (! $conductorDisponible) {
-            return response()->json(['mensaje' => 'No hay conductores disponibles.'], 400);
+            throw new \Exception('No hay conductores disponibles.', 400);
         }
 
+        // Validar el método de pago
         if (! in_array($metodo_pago, ['Efectivo', 'Tarjeta', 'Billetera'])) {
-            return response()->json(['mensaje' => 'Método de pago no válido.'], 400);
+            throw new \Exception('Método de pago no válido.', 400);
         }
 
+        // Verificar saldo suficiente si el método de pago es Tarjeta o Billetera
         if (in_array($metodo_pago, ['Tarjeta', 'Billetera'])) {
             if ($user->billetera < $tarifa) {
-                return response()->json(['mensaje' => 'No tienes saldo suficiente en tu billetera.'], 400);
+                throw new \Exception('No tienes saldo suficiente en tu billetera.', 400);
             }
             $user->billetera -= $tarifa;
             $user->save();
         }
 
-        // Create a new ViajeModel instance
+        // Crear el viaje
         $viaje = ViajeModel::create([
             'pasajero_id' => $user->id_persona,
-            'conductor_id' => null,
+            'conductor_id' => null, // Aún no se asigna un conductor
             'origen' => $origen,
             'destino' => $destino,
             'fecha' => now(),
@@ -48,18 +53,16 @@ class PasajeroService
             'saldo_bloqueado' => $tarifa,
         ]);
 
-        return response()->json([
-            'mensaje' => 'Solicitud de viaje creada exitosamente.',
-            'viaje' => $viaje,
-        ], 201);
+        return $viaje; // Devuelve el viaje creado
     }
 
     public function pagar()
     {
         $user = Auth::user();
 
+        // Verificar que el usuario sea un pasajero
         if ($user->rol !== 'Pasajero') {
-            return response()->json(['mensaje' => 'Solo los pasajeros pueden pagar viajes.'], 403);
+            throw new \Exception('Solo los pasajeros pueden pagar viajes.', 403);
         }
 
         // Buscar el primer viaje completado sin pagar
@@ -68,7 +71,7 @@ class PasajeroService
             ->first();
 
         if (! $viaje) {
-            return response()->json(['mensaje' => 'No hay viajes para pagar.'], 404);
+            throw new \Exception('No hay viajes para pagar.', 404);
         }
 
         // Crear el pago
@@ -86,16 +89,19 @@ class PasajeroService
         // Actualizar estado del viaje
         if ($viaje->metodo === 'Efectivo') {
             $viaje->update(['estado' => 'Viaje pagado sin confirmar por el conductor']);
+
+            return [
+                'mensaje' => 'Pago registrado correctamente.',
+                'pago' => $pago,
+            ];
         } else {
             $viaje->update(['estado' => 'Completado']);
 
-            return response()->json([
+            return [
                 'mensaje' => 'Pago realizado. ¿Desea calificar al conductor?',
                 'viaje' => $viaje,
-            ]);
+            ];
         }
-
-        return response()->json(['mensaje' => 'Pago registrado correctamente.', 'pago' => $pago]);
     }
 
     public function calificarConductor($id_conductor, $calificacion)
@@ -103,16 +109,16 @@ class PasajeroService
         $user = Auth::user();
 
         if ($user->rol !== 'Pasajero') {
-            return response()->json(['mensaje' => 'Solo los pasajeros pueden calificar.'], 403);
+            throw new \Exception('Solo los pasajeros pueden calificar.', 403);
         }
 
-        /*$calificacion->validate([
-            'calificacion' => 'required|integer|min:1|max:5',
-        ]);*/
+        if ($calificacion < 1 || $calificacion > 5) {
+            throw new \Exception('La calificación debe estar entre 1 y 5.', 400);
+        }
 
-        $conductor = ConductorModel::where('id_conductor', $id_conductor)->first();
+        $conductor = ConductorModel::find($id_conductor);
         if (! $conductor) {
-            return response()->json(['mensaje' => 'Conductor no encontrado.'], 404);
+            throw new \Exception('Conductor no encontrado.', 404);
         }
 
         CalificacionConductorModel::create([
@@ -121,7 +127,7 @@ class PasajeroService
             'fecha' => now(),
         ]);
 
-        return response()->json(['mensaje' => 'Calificación registrada correctamente.']);
+        return ['mensaje' => 'Calificación registrada correctamente.'];
     }
 
     public function verHistorialViajesPasajero()
@@ -129,11 +135,11 @@ class PasajeroService
         $user = Auth::user();
 
         if ($user->rol !== 'Pasajero') {
-            return response()->json(['mensaje' => 'Solo los pasajeros pueden ver su historial.'], 403);
+            throw new \Exception('Solo los pasajeros pueden ver su historial.', 403);
         }
 
-        $viajes = ViajeModel::where('pasajero_id', $user->id_pasajero)->get();
+        $viajes = ViajeModel::where('pasajero_id', $user->id_persona)->get();
 
-        return response()->json(['historial' => $viajes]);
+        return $viajes;
     }
 }

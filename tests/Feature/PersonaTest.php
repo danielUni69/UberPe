@@ -182,31 +182,29 @@ class PersonaTest extends TestCase
         ]);
 
         Auth::login($pasajero);
-        $response = $this->personaService->cancelarViaje();
-        // Verificar la respuesta
-        $this->assertEquals(200, $response->getStatusCode());
-        $this->assertJson($response->getContent());
-        $this->assertJsonStringEqualsJsonString(
-            json_encode([
-                'mensaje' => 'Viaje cancelado exitosamente.',
-                'estado' => 'Cancelado por el pasajero',
-            ]),
-            $response->getContent()
-        );
-        $this->assertEquals(0, $viaje->fresh()->saldo_bloqueado);
+
+        // Llamar al método del servicio
+        $viajeCancelado = $this->personaService->cancelarViaje();
+
+        // Verificar que el viaje se haya cancelado correctamente
+        $this->assertEquals('Cancelado por el pasajero', $viajeCancelado->estado);
+        $this->assertEquals(0, $viajeCancelado->saldo_bloqueado);
         $this->assertEquals(100, $pasajero->fresh()->billetera);
     }
 
     public function test_pasajero_cancela_viaje_con_conductor()
     {
-
+        // Crear un usuario pasajero
         $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero', 'billetera' => 100]);
-        $persona = PersonaModel::factory()->create(['nombres' => 'juancito', 'rol' => 'Conductor', 'billetera' => 100]);
+
+        // Crear un conductor
+        $personaConductor = PersonaModel::factory()->create(['rol' => 'Conductor', 'billetera' => 100]);
         $conductor = ConductorModel::factory()->create([
             'disponible' => true,
-            'persona_id' => $persona->id_persona,
+            'persona_id' => $personaConductor->id_persona,
         ]);
 
+        // Crear un viaje con conductor asignado
         $viaje = ViajeModel::factory()->create([
             'pasajero_id' => $pasajero->id_persona,
             'conductor_id' => $conductor->id_conductor,
@@ -218,23 +216,18 @@ class PersonaTest extends TestCase
 
         Auth::login($pasajero);
         $pasajero->billetera = 80;
-        // $this->pasajeroService->solicitarServicio();
-        $this->personaService->cancelarViaje();
-        // dd($pasajero);
-        // dd($conductor);
-        // dd($persona);
+        // Llamar al método del servicio
+        $viajeCancelado = $this->personaService->cancelarViaje();
 
-        // Verificar la respuesta
+        // Verificar que el viaje se haya cancelado correctamente
+        $this->assertEquals('Cancelado por el pasajero', $viajeCancelado->estado);
+        $this->assertEquals(0, $viajeCancelado->saldo_bloqueado);
 
-        // $this->assertEquals('Cancelado por el pasajero', $viaje->fresh()->estado);
-        // Verificar que el saldo bloqueado se haya reiniciado
-        $this->assertEquals(0, $viaje->fresh()->saldo_bloqueado);
-
-        // Verificar que el saldo del pasajero se haya decrementado correctamente
+        // Verificar que el saldo del pasajero se haya ajustado correctamente
         $this->assertEquals(98, $pasajero->fresh()->billetera);
 
         // Verificar que el saldo del conductor se haya incrementado correctamente
-        $this->assertEquals(102, $conductor->persona->fresh()->billetera);
+        $this->assertEquals(102, $personaConductor->fresh()->billetera);
 
         // Verificar que el conductor esté disponible
         $this->assertTrue($conductor->fresh()->disponible);

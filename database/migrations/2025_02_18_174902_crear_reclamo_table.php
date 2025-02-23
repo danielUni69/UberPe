@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('reclamo', function (Blueprint $table) {
-            $table->id('id_reclamo'); // Clave primaria
+            $table->id('id_reclamo');
             $table->unsignedBigInteger('persona_id');
             $table->unsignedBigInteger('viaje_id'); // Clave foránea
             $table->text('motivo');

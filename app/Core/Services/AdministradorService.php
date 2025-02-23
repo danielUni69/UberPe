@@ -1,62 +1,47 @@
 <?php
 
+namespace App\Core\Services;
+
 use App\Models\ConductorModel;
-use App\Models\Pago;
-use App\Models\PasajeroModel;
+use App\Models\PagoModel;
+use App\Models\PersonaModel;
 use App\Models\SancionModel;
-use App\Models\Viaje;
+use App\Models\ViajeModel;
 
 class AdministradorService
 {
-    public function gestionConductor()
+    public function getConductores()
     {
-        $conductores = ConductorModel::all(); // Obtener todos los conductores
-
-        return response()->json($conductores); // Retorna la lista de conductores en formato JSON
+        return $conductores = ConductorModel::all();
     }
 
-    public function gestionPasajero()
+    public function getPasajeros()
     {
-        $pasajeros = PasajeroModel::all(); // Obtener todos los pasajeros
-
-        return response()->json($pasajeros); // Retorna la lista de pasajeros en formato JSON
+        return $pasajeros = PersonaModel::all();
     }
 
-    public function sancionar()
+    public function sancionar($id, SancionModel $sancion)
     {
-        $this->gestionPasajero();
-        $nombre = readline('Nombre de persona a sancionar: ');
+        $persona = PersonaModel::find($id);
 
-        // Buscar la persona por su nombre
-        $persona = PasajeroModel::where('nombres', $nombre)->first();
-
-        if ($persona) {
-            $sancion = new SancionModel([
-                'persona_id' => $persona->id, // Asegúrate de que 'persona_id' esté en la tabla de sanciones
-                'motivo' => readline('Motivo: '),
-                'tipo' => readline('Tipo (Leve/Moderado/Grave): '),
-                'fecha_inicio' => now(),
-                'fecha_fin' => now()->addWeek(), // Sanción de 1 semana
-                'estado' => 'Activo',
-            ]);
-            $sancion->save(); // Guardar la sanción en la base de datos
-
-            return response()->json(['message' => 'Sanción aplicada exitosamente!'], 200); // Retornar respuesta en JSON
+        if (! $persona) {
+            throw new \Exception('Persona no encontrada.', 404);
         }
 
-        return response()->json(['message' => 'Persona no encontrada'], 404); // Retornar error si la persona no existe
+        $sancion->persona_id = $persona->id_persona;
+        $sancion->save();
+
+        return $sancion;
     }
 
     public function historialViajesGeneral()
     {
-        $viajes = Viaje::all(); // Obtener todos los viajes
-
-        return response()->json($viajes); // Retorna la lista de viajes en formato JSON
+        return $viajes = ViajeModel::all();
     }
 
     public function verGanancias()
     {
-        $pagos = Pago::all(); // Obtener todos los pagos
+        $pagos = PagoModel::all(); // Obtener todos los pagos
 
         $total = 0;
         $resultado = [];
@@ -71,9 +56,9 @@ class AdministradorService
             $total += (float) $p->comision;
         }
 
-        return response()->json([
+        return [
             'pagos' => $resultado,
             'total_ganancias' => $total,
-        ]);
+        ];
     }
 }

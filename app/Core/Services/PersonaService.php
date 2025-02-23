@@ -85,15 +85,12 @@ class PersonaService
     {
         if (Auth::attempt(['usuario' => $usuario, 'password' => $password])) {
             $user = Auth::user();
-            session(['rol' => $user->rol]); // Guardar el rol en sesión
+            session(['rol' => $user->rol]);
 
-            return response()->json([
-                'mensaje' => 'Inicio de sesión exitoso',
-                'usuario' => $user,
-            ], 200);
+            return $user; // Devuelve el modelo de usuario
         }
 
-        return response()->json(['mensaje' => 'Credenciales incorrectas'], 401);
+        throw new \Exception('Credenciales incorrectas');
     }
 
     /**
@@ -103,11 +100,10 @@ class PersonaService
      */
     public function cerrarSesion()
     {
-        Auth::logout(); // Cierra la sesión del usuario
+        Auth::logout();
+        session()->forget('rol');
 
-        session()->forget('rol'); // Opcional: eliminar el rol de la sesión
-
-        return response()->json(['mensaje' => 'Sesión cerrada correctamente'], 200);
+        return true; // Indica que la sesión se cerró correctamente
     }
 
     public function verBilletera($id)
@@ -147,17 +143,18 @@ class PersonaService
     public function cancelarViaje()
     {
         $user = Auth::user();
+        $rol = session('rol') ?? $user->rol;
 
-        $rol = session('rol') ?? $user->rol; // Asegurar que siempre haya un rol válido
-
+        // Verificar permisos
         if (! in_array($rol, ['Pasajero', 'Conductor'])) {
-            return response()->json(['mensaje' => 'No tienes permisos para cancelar viajes.'], 403);
+            throw new \Exception('No tienes permisos para cancelar viajes.', 403);
         }
 
+        // Buscar el viaje activo
         $viaje = ViajeModel::where(function ($query) use ($user, $rol) {
-            if ($rol === 'pasajero') {
+            if ($rol === 'Pasajero') {
                 $query->where('pasajero_id', $user->id_persona);
-            } elseif ($rol === 'conductor') {
+            } elseif ($rol === 'Conductor') {
                 $query->where('conductor_id', $user->id_persona);
             }
         })
@@ -165,34 +162,29 @@ class PersonaService
             ->first();
 
         if (! $viaje) {
-            return response()->json(['mensaje' => 'No tienes viajes activos para cancelar.'], 400);
+            throw new \Exception('No tienes viajes activos para cancelar.', 400);
         }
-        // dd($user);
+
+        // Lógica de cancelación
         if (in_array($viaje->metodo, ['Billetera', 'Tarjeta'])) {
             if ($rol === 'Pasajero') {
                 if ($viaje->conductor) {
                     $comision = $viaje->saldo_bloqueado * 0.1; // 10% de comisión para el conductor
                     $montoDevuelto = $viaje->saldo_bloqueado - $comision; // 90% que se devuelve al pasajero
+
                     // Incrementar el saldo del conductor con la comisión
                     $viaje->conductor->persona->billetera += $comision;
                     $viaje->conductor->persona->save();
-                    // dd($viaje->conductor->persona->billetera);
-                    // dd($viaje->conductor->persona->billetera);
+
                     // Devolver el 90% al saldo del pasajero
-                    // dd($user->billetera);
                     $user->billetera += $montoDevuelto;
-                    // dd($user->billetera);
                     $user->save();
 
                     // Marcar al conductor como disponible
                     $viaje->conductor->update(['disponible' => true]);
-                } else {
-                    $user = $viaje->saldo_bloqueado;
                 }
                 $viaje->estado = 'Cancelado por el pasajero';
-
-            } elseif ($rol === 'conductor') {
-                dd('Hola conductor');
+            } elseif ($rol === 'Conductor') {
                 if ($viaje->pasajero) {
                     $viaje->pasajero->increment('billetera', $viaje->saldo_bloqueado); // Reembolso completo
                 }
@@ -201,18 +193,16 @@ class PersonaService
             }
         } else {
             // Si el pago es en efectivo, solo cancelamos el viaje
-            if ($rol === 'conductor') {
+            if ($rol === 'Conductor') {
                 $viaje->conductor->update(['disponible' => true]);
             }
             $viaje->estado = 'Cancelado por el pasajero';
         }
+
         // Resetear saldo bloqueado y guardar cambios
         $viaje->saldo_bloqueado = 0;
         $viaje->save();
 
-        return response()->json([
-            'mensaje' => 'Viaje cancelado exitosamente.',
-            'estado' => $viaje->estado,
-        ], 200);
+        return $viaje; // Devuelve el viaje actualizado
     }
 }

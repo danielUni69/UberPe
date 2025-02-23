@@ -6,7 +6,6 @@ use App\Core\Persona;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
-
 class PersonaModel extends Authenticatable
 {
     use HasFactory;
@@ -39,8 +38,14 @@ class PersonaModel extends Authenticatable
             $this->deuda
         );
     }
+
     public function conductor()
     {
         return $this->hasOne(ConductorModel::class, 'persona_id');
+    }
+
+    public function sancion()
+    {
+        return $this->hasMany(SancionModel::class, 'persona_id');
     }
 }

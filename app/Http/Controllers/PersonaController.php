@@ -52,6 +52,11 @@ class PersonaController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
+    public function showLoginForm()
+    {
+        return view('persona.registro');
+    }
+
     public function login(Request $request)
     {
         $usuario = $request->input('usuario');
@@ -71,7 +76,7 @@ class PersonaController extends Controller
 
     /**
      * Cierra la sesión.
-        */
+     */
     public function logout()
     {
         $this->listaPersona->cerrarSesion();

@@ -7,7 +7,6 @@ use App\Models\ConductorModel;
 use App\Models\PersonaModel;
 use App\Models\ViajeModel;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class PasajeroTest extends TestCase
@@ -27,22 +26,17 @@ class PasajeroTest extends TestCase
 
     public function test_solicitar_servicio_metodo_efectivo()
     {
+        // Crear un conductor disponible
+        $conductor = ConductorModel::factory()->create(['disponible' => true]);
 
-        $persona = PersonaModel::factory()->create(['nombres' => 'juancito', 'rol' => 'Conductor', 'billetera' => 100]);
-        $conductor = ConductorModel::factory()->create([
-            'disponible' => true,
-            'persona_id' => $persona->id_persona,
-        ]);
-
+        // Crear un pasajero
         $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero']);
         $this->actingAs($pasajero);
-        $response = $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Efectivo', 15);
-        // Convertir la respuesta a una instancia de TestResponse
-        $response = new TestResponse($response);
-        // dd($response);
-        $response->assertStatus(201)->assertJson([
-            'mensaje' => 'Solicitud de viaje creada exitosamente.',
-        ]);
+
+        // Llamar al método del servicio
+        $viaje = $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Efectivo', 15);
+
+        // Verificar que el viaje se haya creado correctamente
         $this->assertDatabaseHas('viaje', [
             'pasajero_id' => $pasajero->id_persona,
             'conductor_id' => null,
@@ -57,54 +51,63 @@ class PasajeroTest extends TestCase
 
     public function test_no_hay_conductores_disponibles()
     {
-        $persona = PersonaModel::factory()->create();
-        $this->actingAs($persona);
+        // Crear un pasajero
+        $pasajero = PersonaModel::factory()->create();
+        $this->actingAs($pasajero);
 
-        $response = $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Efectivo', 15);
+        // Esperar una excepción
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No hay conductores disponibles.');
 
-        $response = new TestResponse($response);
-        $response->assertStatus(400)
-            ->assertJson(['mensaje' => 'No hay conductores disponibles.']);
+        // Llamar al método del servicio
+        $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Efectivo', 15);
     }
 
     public function test_saldo_insuficiente_en_billetera()
     {
-        $pasajero = PersonaModel::factory()->create(['billetera' => 10]); // Saldo menor a la tarifa
-        ConductorModel::factory()->create(['disponible' => true]);
-        $this->actingAs($pasajero);
-        $response = $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Tarjeta', 15);
+        // Crear un conductor disponible
+        $conductor = ConductorModel::factory()->create(['disponible' => true]);
 
-        $response = new TestResponse($response);
-        $response->assertStatus(400)
-            ->assertJson(['mensaje' => 'No tienes saldo suficiente en tu billetera.']);
+        // Crear un pasajero con saldo insuficiente
+        $pasajero = PersonaModel::factory()->create(['billetera' => 10]);
+        $this->actingAs($pasajero);
+
+        // Esperar una excepción
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('No tienes saldo suficiente en tu billetera.');
+
+        // Llamar al método del servicio
+        $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Tarjeta', 15);
     }
 
     public function test_solicitud_de_viaje_exitosa_con_tarjeta_o_billetera()
     {
-        $pasajero = PersonaModel::factory()->create(['billetera' => 50]); // Saldo suficiente
-        ConductorModel::factory()->create(['disponible' => true]);
+        // Crear un conductor disponible
+        $conductor = ConductorModel::factory()->create(['disponible' => true]);
+
+        // Crear un pasajero con saldo suficiente
+        $pasajero = PersonaModel::factory()->create(['billetera' => 50]);
         $this->actingAs($pasajero);
 
-        $response = $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Tarjeta', 20);
+        // Llamar al método del servicio
+        $viaje = $this->pasajeroService->solicitarServicio('upds', 'Plaza', 'Tarjeta', 20);
 
-        $response = new TestResponse($response);
-        $response->assertStatus(201)
-            ->assertJson([
-                'mensaje' => 'Solicitud de viaje creada exitosamente.',
-            ]);
-
+        // Verificar que el viaje se haya creado correctamente
         $this->assertDatabaseHas('viaje', [
             'pasajero_id' => $pasajero->id_persona,
             'estado' => 'Pendiente',
             'tarifa' => 20,
         ]);
 
-        $this->assertEquals(30, $pasajero->fresh()->billetera); // Se descontó el saldo
+        // Verificar que el saldo del pasajero se haya descontado correctamente
+        $this->assertEquals(30, $pasajero->fresh()->billetera);
     }
 
     public function test_pasajero_paga_viaje_en_efectivo()
     {
+        // Crear un pasajero
         $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero']);
+
         // Crear un viaje pendiente de pago
         $viaje = ViajeModel::factory()->create([
             'pasajero_id' => $pasajero->id_persona,
@@ -112,20 +115,22 @@ class PasajeroTest extends TestCase
             'tarifa' => 100,
             'metodo' => 'Efectivo',
         ]);
-        $this->actingAs($pasajero);
-        $response = $this->pasajeroService->pagar();
-        // dd($pasajero);
-        $response = new TestResponse($response);
-        $response->assertStatus(200)
-            ->assertJson([
-                'mensaje' => 'Pago registrado correctamente.',
-            ]);
 
+        $this->actingAs($pasajero);
+
+        // Llamar al método del servicio
+        $resultado = $this->pasajeroService->pagar();
+
+        // Verificar la respuesta
+        $this->assertEquals('Pago registrado correctamente.', $resultado['mensaje']);
+
+        // Verificar que el viaje se haya actualizado correctamente
         $this->assertDatabaseHas('viaje', [
             'pasajero_id' => $pasajero->id_persona,
             'estado' => 'Viaje pagado sin confirmar por el conductor',
         ]);
 
+        // Verificar que el pago se haya creado correctamente
         $this->assertDatabaseHas('pago', [
             'viaje_id' => $viaje->id_viaje,
             'monto_total' => 100,
@@ -136,7 +141,10 @@ class PasajeroTest extends TestCase
 
     public function test_pasajero_paga_viaje_con_otro_metodo()
     {
+        // Crear un pasajero
         $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero']);
+
+        // Crear un viaje pendiente de pago
         $viaje = ViajeModel::factory()->create([
             'pasajero_id' => $pasajero->id_persona,
             'estado' => 'Completado sin pagar',
@@ -145,15 +153,14 @@ class PasajeroTest extends TestCase
         ]);
 
         $this->actingAs($pasajero);
-        $response = $this->pasajeroService->pagar();
-        // dd($pasajero);
-        $response = new TestResponse($response);
 
-        $response->assertStatus(200)
-            ->assertJson([
-                'mensaje' => 'Pago realizado. ¿Desea calificar al conductor?',
-            ]);
+        // Llamar al método del servicio
+        $resultado = $this->pasajeroService->pagar();
 
+        // Verificar la respuesta
+        $this->assertEquals('Pago realizado. ¿Desea calificar al conductor?', $resultado['mensaje']);
+
+        // Verificar que el viaje se haya actualizado correctamente
         $this->assertDatabaseHas('viaje', [
             'id_viaje' => $viaje->id_viaje,
             'estado' => 'Completado',
@@ -162,24 +169,51 @@ class PasajeroTest extends TestCase
 
     public function test_pasajero_califica_correctamente_a_un_conductor()
     {
-        $persona = PersonaModel::factory()->create(['rol' => 'Pasajero']);
-        $conductor = ConductorModel::factory()->create(
-            ['persona_id' => $persona->id_persona]
-        );
         $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero']);
+
+        $conductor = ConductorModel::factory()->create();
+
         $this->actingAs($pasajero);
+
         $calificacion = 4;
-        $response = $this->pasajeroService->calificarConductor($conductor->id_conductor, $calificacion);
 
-        $response = new TestResponse($response);
-        //  dd($response);
-        $response->assertStatus(200)
-            ->assertJson(['mensaje' => 'Calificación registrada correctamente.']);
+        $resultado = $this->pasajeroService->calificarConductor($conductor->id_conductor, $calificacion);
 
-        // Verificar que la calificación fue registrada
+        $this->assertEquals('Calificación registrada correctamente.', $resultado['mensaje']);
+
         $this->assertDatabaseHas('calificacion_conductor', [
             'conductor_id' => $conductor->id_conductor,
             'calificacion' => $calificacion,
         ]);
+    }
+
+    public function test_pasajero_califica_con_valor_fuera_de_rango()
+    {
+        $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero']);
+
+        $conductor = ConductorModel::factory()->create();
+
+        $this->actingAs($pasajero);
+
+        $calificacion = 6;
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('La calificación debe estar entre 1 y 5.');
+
+        $this->pasajeroService->calificarConductor($conductor->id_conductor, $calificacion);
+    }
+
+    public function test_pasajero_ve_historial_de_viajes()
+    {
+        $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero']);
+
+        $viajes = ViajeModel::factory()->count(3)->create(['pasajero_id' => $pasajero->id_persona]);
+
+        $this->actingAs($pasajero);
+
+        $historial = $this->pasajeroService->verHistorialViajesPasajero();
+
+        $this->assertCount(3, $historial);
+        $this->assertEquals($viajes->pluck('id_viaje'), $historial->pluck('id_viaje'));
     }
 }

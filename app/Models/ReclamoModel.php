@@ -4,7 +4,6 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\SancionModel;
 
 class ReclamoModel extends Model
 {
@@ -15,7 +14,7 @@ class ReclamoModel extends Model
     protected $primaryKey = 'id_reclamo'; // Clave primaria personalizada
 
     protected $fillable = [
-        'persona_id', 'motivo', 'fecha',
+        'persona_id', 'viaje_id', 'motivo', 'fecha',
     ];
 
     // Relación con PersonaModel
@@ -28,5 +27,10 @@ class ReclamoModel extends Model
     public function sanciones()
     {
         return $this->hasMany(SancionModel::class, 'reclamo_id', 'id_reclamo');
+    }
+
+    public function viaje()
+    {
+        return $this->belongsTo(ViajeModel::class, 'viaje_id', 'id_viaje');
     }
 }
