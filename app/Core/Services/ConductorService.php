@@ -37,10 +37,11 @@ class ConductorService
         $personaModel->telefono = $persona->getTelefono();
         $personaModel->email = $persona->getEmail();
         $personaModel->usuario = $persona->getUsuario();
-        $personaModel->password = Hash::make($persona->getPassword()); // Encriptar la contraseña
-        $personaModel->rol = 'Conductor'; // Rol fijo para conductores
+        $personaModel->password = Hash::make($persona->getPassword()); 
+        $personaModel->rol = 'Conductor'; 
         $personaModel->billetera = $persona->getBilletera();
         $personaModel->deuda = $persona->getDeuda();
+    
         $personaModel->save();
 
         // Luego, creamos el Conductor
@@ -58,6 +59,7 @@ class ConductorService
         $vehiculoModel->color = $vehiculo->getColor();
         $vehiculoModel->save();
 
+        return $personaModel;
     }
 
     /**
@@ -66,28 +68,26 @@ class ConductorService
      * @param  int  $id
      * @return ConductorModel
      */
-    public function edit($id, Conductor $conductor)
+    public function edit($id, Persona $persona,  Conductor $conductor)
     {
         // Buscar la Persona asociada al conductor
         $personaModel = PersonaModel::find($id);
 
         if ($personaModel) {
             // Actualizar los campos de Persona
-            $personaModel->ci = $conductor->getCi();
-            $personaModel->nombres = $conductor->getNombres();
-            $personaModel->apellidos = $conductor->getApellidos();
-            $personaModel->telefono = $conductor->getTelefono();
-            $personaModel->email = $conductor->getEmail();
-            $personaModel->usuario = $conductor->getUsuario();
+            $personaModel->ci = $persona->getCi();
+            $personaModel->nombres = $persona->getNombres();
+            $personaModel->apellidos = $persona->getApellidos();
+            $personaModel->telefono = $persona->getTelefono();
+            $personaModel->email = $persona->getEmail();
+            $personaModel->usuario = $persona->getUsuario();
 
             // Si se proporciona una nueva contraseña, se encripta
-            if ($conductor->getPassword()) {
-                $personaModel->password = Hash::make($conductor->getPassword());
-            }
+            
 
             $personaModel->rol = 'Conductor'; // Rol fijo para conductores
-            $personaModel->billetera = $conductor->getBilletera();
-            $personaModel->deuda = $conductor->getDeuda();
+            $personaModel->billetera = $persona->getBilletera();
+            $personaModel->deuda = $persona->getDeuda();
             $personaModel->save();
 
             // Actualizar los campos de Conductor
@@ -109,7 +109,12 @@ class ConductorService
 
         $persona = PersonaModel::find($id);
         $conductor = ConductorModel::where('persona_id', $persona->id_persona)->first();
-        dd($conductor);
+
+        return [
+            'persona' => $persona->convertToPersona(),
+            'conductor' => $conductor->convertToConductor(),
+        ];
+
     }
 
     public function delete($id)

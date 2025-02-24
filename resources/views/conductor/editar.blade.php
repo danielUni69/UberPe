@@ -41,7 +41,7 @@
         <div class="col-md-10">
             <div class="form-container">
                 <h2 class="text-center">Editar Perfil</h2>
-                <form action="{{ route('persona.editar') }}" method="POST">
+                <form action="{{ route('conductor.editar') }}" method="POST">
                     @csrf
                     
                     <div class="row">
@@ -112,6 +112,33 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+
+                            <!-- Campos específicos de conductor -->
+
+                            @if (Auth::user()->rol === 'Conductor')
+                                <div class="mb-3 conductor-fields">
+                                    <label class="form-label">Número de Licencia</label>
+                                    <input type="text" class="form-control @error('licencia') is-invalid @enderror"
+                                        name="licencia" value="{{ old('licencia', $conductor->getLicencia()) }}">
+                                    @error('licencia')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="mb-3 conductor-fields">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="disponible"
+                                            id="disponible"
+                                            {{ old('disponible', $conductor->getDisponible()) ? 'checked' : '' }}>
+                                        <label class="form-check-label" for="disponible">
+                                            Disponible para viajes
+                                        </label>
+                                    </div>
+                                    @error('disponible')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            @endif
                         </div>
                     </div>
 

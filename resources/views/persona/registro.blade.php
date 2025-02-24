@@ -32,9 +32,7 @@
             color: white;
         }
 
-        .conductor-fields {
-            display: {{ $persona->getRol() === 'conductor' ? 'block' : 'none' }};
-        }
+        
     </style>
 </head>
 
@@ -43,16 +41,16 @@
         <div class="col-md-10">
             <div class="form-container">
                 <h2 class="text-center">Editar Perfil</h2>
-                <form action="{{ route('persona.editar') }}" method="POST">
+                <form action="{{ route('registro') }}" method="POST">
                     @csrf
-                    <input type="hidden" name="rol" value="{{ $persona->getRol() }}">
+                    
                     <div class="row">
                         <!-- Primera columna -->
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label">Nombre(s)</label>
                                 <input type="text" class="form-control @error('nombres') is-invalid @enderror"
-                                    name="nombres" value="{{ old('nombres', $persona->getNombres()) }}">
+                                    name="nombres" value="{{ old('nombres') }}">
                                 @error('nombres')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -61,7 +59,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Apellido(s)</label>
                                 <input type="text" class="form-control @error('apellidos') is-invalid @enderror"
-                                    name="apellidos" value="{{ old('apellidos', $persona->getApellidos()) }}">
+                                    name="apellidos" value="{{ old('apellidos') }}">
                                 @error('apellidos')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -70,7 +68,7 @@
                             <div class="mb-3">
                                 <label class="form-label">CI</label>
                                 <input type="text" class="form-control @error('ci') is-invalid @enderror"
-                                    name="ci" value="{{ old('ci', $persona->getCi()) }}">
+                                    name="ci" >
                                 @error('ci')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -79,7 +77,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                    name="email" value="{{ old('email', $persona->getEmail()) }}">
+                                    name="email" value="{{ old('email') }}">
                                 @error('email')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -91,7 +89,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Teléfono</label>
                                 <input type="text" class="form-control @error('telefono') is-invalid @enderror"
-                                    name="telefono" value="{{ old('telefono', $persona->getTelefono()) }}">
+                                    name="telefono" value="{{ old('telefono') }}">
                                 @error('telefono')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -100,7 +98,7 @@
                             <div class="mb-3">
                                 <label class="form-label">Usuario</label>
                                 <input type="text" class="form-control @error('usuario') is-invalid @enderror"
-                                    name="usuario" value="{{ old('usuario', $persona->getUsuario()) }}">
+                                    name="usuario" value="{{ old('usuario') }}">
                                 @error('usuario')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -109,38 +107,11 @@
                             <div class="mb-3">
                                 <label class="form-label">Billetera</label>
                                 <input type="number" class="form-control @error('billetera') is-invalid @enderror"
-                                    name="billetera" value="{{ old('billetera', $persona->getBilletera()) }}">
+                                    name="billetera" value="{{ old('billetera') }}">
                                 @error('billetera')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
-                            <!-- Campos específicos de conductor -->
-
-                            @if (Auth::user()->rol === 'Conductor')
-                                <div class="mb-3 conductor-fields">
-                                    <label class="form-label">Número de Licencia</label>
-                                    <input type="text" class="form-control @error('licencia') is-invalid @enderror"
-                                        name="licencia" value="{{ old('licencia', $persona->getLicencia()) }}">
-                                    @error('licencia')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3 conductor-fields">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="disponible"
-                                            id="disponible"
-                                            {{ old('disponible', $persona->getDisponible()) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="disponible">
-                                            Disponible para viajes
-                                        </label>
-                                    </div>
-                                    @error('disponible')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-                            @endif
                         </div>
                     </div>
 

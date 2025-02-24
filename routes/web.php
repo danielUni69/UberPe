@@ -14,3 +14,4 @@ Route::post('/conductor/registrar', [ConductorController::class, 'store'])->name
 Route::get('/persona/editar', [PersonaController::class, 'showEditarForm'])->name('persona.editar');
 Route::post('/persona/editar', [PersonaController::class, 'update'])->name('persona.editar');
 Route::get('/conductor/editar', [ConductorController::class, 'showEditConductorForm'])->name('conductor.editar');
+Route::post('/conductor/editar', [ConductorController::class, 'update'])->name('conductor.editar'); 

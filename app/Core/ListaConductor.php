@@ -17,11 +17,14 @@ class ListaConductor
     public function add(Persona $persona, Conductor $conductor, Vehiculo $vehiculo)
     {
 
-        $this->service->add($persona, $conductor, $vehiculo);
+        return $this->service->add($persona, $conductor, $vehiculo);
     }
 
     public function getConductor($id)
     {
         return $this->service->getConductor($id);
+    }
+    public function edit($id, $persona, $conductor){
+        return $this->service->edit($id, $persona, $conductor);
     }
 }

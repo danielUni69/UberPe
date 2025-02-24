@@ -123,6 +123,7 @@
                         Editar perfil</a>
                     <a href="#" class="submenu-item"><i class="mdi mdi-car"></i> Editar vehículo</a>
                     <a href="#" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
+                    
                 </div>
             @else
                 <a id="profile-link"><i class="mdi mdi-account"></i> Perfil</a>

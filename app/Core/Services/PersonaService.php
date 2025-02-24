@@ -31,7 +31,7 @@ class PersonaService
         $personaModel->telefono = $persona->getTelefono();
         $personaModel->email = $persona->getEmail();
         $personaModel->usuario = $persona->getUsuario();
-        $personaModel->password = Hash::make($persona->getPassword()); // Encriptar la contraseña
+        $personaModel->password = Hash::make($persona->getPassword());
         $personaModel->rol = $persona->getRol();
         $personaModel->billetera = $persona->getBilletera();
         $personaModel->deuda = $persona->getDeuda();
@@ -98,6 +98,19 @@ class PersonaService
         session()->forget('rol');
 
         return true; // Indica que la sesión se cerró correctamente
+    }
+
+    public function cambiarPass($currentPassword, $newPassword)
+    {
+        $user = Auth::user();
+
+        if (Hash::check($currentPassword, $user->password)) {
+            $user->password = Hash::make($newPassword);
+            $user->save();
+            return ['success' => true, 'message' => 'Contraseña cambiada exitosamente.'];
+        } else {
+            return ['success' => false, 'message' => 'La contraseña actual no es correcta.'];
+        }
     }
 
     public function verBilletera($id)

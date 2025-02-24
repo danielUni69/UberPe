@@ -5,7 +5,7 @@ namespace Database\Seeders;
 use App\Models\PersonaModel;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-
+use App\Models\ConductorModel;
 class ConductorSeeder extends Seeder
 {
     /**
@@ -21,7 +21,7 @@ class ConductorSeeder extends Seeder
             'email' => 'carlos.conductor@example.com',
             'usuario' => 'carlos',
             'password' => Hash::make('conductor123'),
-            'billetera' => 2000,
+            'billetera' => 2000,  
             'deuda' => 0,
             'rol' => 'Conductor',
         ]);
