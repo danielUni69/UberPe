@@ -33,7 +33,6 @@ class ListaPersona
             'password' => $persona->getPassword(),
             'rol' => $persona->getRol(),
             'billetera' => $persona->getBilletera(),
-            'deuda' => $persona->getDeuda(),
         ];
 
         $validator = PersonaValidation::validateAdd($data);
@@ -48,26 +47,7 @@ class ListaPersona
     public function edit(Persona $persona, $id)
     {
 
-        $data = [
-            'ci' => $persona->getCi(),
-            'nombres' => $persona->getNombres(),
-            'apellidos' => $persona->getApellidos(),
-            'telefono' => $persona->getTelefono(),
-            'email' => $persona->getEmail(),
-            'usuario' => $persona->getUsuario(),
-            'password' => $persona->getPassword(),
-            'rol' => $persona->getRol(),
-            'billetera' => $persona->getBilletera(),
-            'deuda' => $persona->getDeuda(),
-        ];
-
-        $validator = PersonaValidation::validateEdit($data, $id);
-
-        if ($validator->fails()) {
-            throw new ValidationException($validator);
-        }
-
-        $this->service->edit($persona, $id);
+        $this->service->editPersona($persona, $id);
     }
 
     /**

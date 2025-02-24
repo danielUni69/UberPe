@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
     <style>
         body {
             background: linear-gradient(to right, #a3e635, #1e3a08);
@@ -83,11 +84,12 @@
 
                 <button type="submit" class="btn btn-success w-100 mt-2">ENTRAR</button>
             </form>
-
-            <a href="{{ route('registro') }}" class="text-success">Registrarse</a>
+            <div class="mt-3 flex">
+                <a href="{{ route('conductor.registro') }}" class="text-success">Registrarse como conductor</a>
+                <a href="{{ route('registro') }}" class="text-success">Registrarse como pasajero</a>
+            </div>
         </div>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>

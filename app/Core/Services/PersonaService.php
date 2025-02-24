@@ -46,7 +46,7 @@ class PersonaService
      * @param  int  $id
      * @return PersonaModel
      */
-    public function editarPersona($id, Persona $persona)
+    public function editPersona(Persona $persona, $id)
     {
         // Buscar la persona por su ID
         $personaModel = PersonaModel::find($id);
@@ -60,14 +60,8 @@ class PersonaService
             $personaModel->email = $persona->getEmail();
             $personaModel->usuario = $persona->getUsuario();
 
-            // Si se proporciona una nueva contraseña, se encripta
-            if ($persona->getPassword()) {
-                $personaModel->password = Hash::make($persona->getPassword());
-            }
-
             $personaModel->rol = $persona->getRol();
             $personaModel->billetera = $persona->getBilletera();
-            $personaModel->deuda = $persona->getDeuda();
             $personaModel->save();
 
             return $personaModel;
@@ -137,7 +131,12 @@ class PersonaService
      */
     public function getPersona($id)
     {
-        return PersonaModel::find($id);
+        $persona = PersonaModel::find($id);
+        if (! $persona) {
+            return null;
+        }
+
+        return $persona->convertToPersona();
     }
 
     public function cancelarViaje()

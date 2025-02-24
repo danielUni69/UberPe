@@ -13,7 +13,7 @@ class ConductorSeeder extends Seeder
      */
     public function run(): void
     {
-        PersonaModel::create([
+        $persona = PersonaModel::create([
             'ci' => '11223344',
             'nombres' => 'Carlos',
             'apellidos' => 'Martínez',
@@ -24,6 +24,11 @@ class ConductorSeeder extends Seeder
             'billetera' => 2000,
             'deuda' => 0,
             'rol' => 'Conductor',
+        ]);
+        ConductorModel::create([
+            'persona_id' => $persona->id_persona,
+            'licencia' => '123456',
+            'disponible' => true,
         ]);
     }
 }

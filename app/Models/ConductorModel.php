@@ -44,22 +44,8 @@ class ConductorModel extends Model
 
     public function convertToConductor(): Conductor
     {
-        $persona = $this->persona;
-
-        if (! $persona) {
-            throw new \Exception('No se encontró la persona asociada al conductor.');
-        }
 
         return new Conductor(
-            $persona->ci,
-            $persona->nombres,
-            $persona->apellidos,
-            $persona->telefono,
-            $persona->email,
-            $persona->usuario,
-            $persona->password,
-            $persona->rol,
-            $persona->billetera,
             $this->licencia,
             $this->disponible
         );

@@ -13,10 +13,9 @@ class PersonaValidation
             'nombres' => 'required|max:100',
             'apellidos' => 'required|max:100',
             'telefono' => 'required|max:15',
-            'email' => 'required|email|unique:persona,email|max:100',
+            'email' => 'required|email|max:100',
             'usuario' => 'required|unique:persona,usuario|max:50',
             'password' => 'required|max:100',
-            'rol' => 'required|in:Administrador,Conductor,Pasajero',
             'billetera' => 'numeric|min:0',
         ]);
     }
@@ -31,7 +30,6 @@ class PersonaValidation
             'email' => 'required|email|unique:persona,email|max:100'.$id,
             'usuario' => 'required|unique:persona,usuario|max:50'.$id,
             'password' => 'required|max:100',
-            'rol' => 'required|in:Administrador,Conductor, Pasajero',
             'billetera' => 'numeric|min:0',
         ]);
     }

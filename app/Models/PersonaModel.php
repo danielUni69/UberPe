@@ -32,10 +32,10 @@ class PersonaModel extends Authenticatable
             $this->telefono,
             $this->email,
             $this->usuario,
-            $this->password,
             $this->rol,
             $this->billetera,
-            $this->deuda
+            $this->deuda,
+            $this->password,
         );
     }
 

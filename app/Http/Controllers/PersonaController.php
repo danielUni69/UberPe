@@ -18,7 +18,7 @@ class PersonaController extends Controller
 
     public function index()
     {
-        return view('viaje.servicio');
+        return view('home.home');
     }
 
     /**
@@ -45,13 +45,51 @@ class PersonaController extends Controller
             $request->input('email'),
             $request->input('usuario'),
             bcrypt($request->input('password')), // Encriptar contraseña
-            $request->input('rol'),
+            'Pasajero',
             $request->input('billetera')
         );
 
-        $this->listaPersona->add($persona);
+        $response = $this->listaPersona->add($persona);
 
-        return redirect()->route('viaje')->with('success', 'Usuario creado exitosamente.');
+        return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
+    }
+
+    public function update(Request $request, $id = null)
+    {
+        if ($id == null) {
+            $id = auth()->user()->id_persona;
+        }
+
+        $persona = new Persona(
+            $request->input('ci'),
+            $request->input('nombres'),
+            $request->input('apellidos'),
+            $request->input('telefono'),
+            $request->input('email'),
+            $request->input('usuario'),
+            'Pasajero',
+            $request->input('billetera')
+        );
+
+        $response = $this->listaPersona->edit($persona, $id);
+
+        return redirect()->route('home')->with('success', 'Usuario editado exitosamente.');
+    }
+
+    public function showEditarForm($id = null)
+    {
+
+        if ($id == null) {
+            $persona = $this->listaPersona->getPersona(auth()->user()->id_persona);
+        } else {
+            $persona = $this->listaPersona->getPersona($id);
+        }
+        if (! $persona) {
+            return redirect()->route('home')->with('error', 'Pasajero no encontrado.');
+        }
+
+        // Mostrar el formulario de edición con los datos del pasajero
+        return view('persona.registro', compact('persona'));
     }
 
     /**
@@ -75,7 +113,7 @@ class PersonaController extends Controller
         $usuario = $request->input('usuario');
         $password = $request->input('password');
         if ($this->listaPersona->iniciarSesion($usuario, $password)) {
-            return redirect()->route('viaje')->with('success', 'Inicio de sesión exitoso.');
+            return redirect()->route('home')->with('success', 'Inicio de sesión exitoso.');
         }
 
         return back()->withErrors(['error' => 'Credenciales incorrectas.']);

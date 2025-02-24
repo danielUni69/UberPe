@@ -3,10 +3,13 @@
 namespace App\Core\Services;
 
 use App\Core\Conductor;
+use App\Core\Persona;
+use App\Core\Vehiculo;
 use App\Models\CalificacionConductorModel;
 use App\Models\ConductorModel;
 use App\Models\PagoModel;
 use App\Models\PersonaModel;
+use App\Models\VehiculoModel;
 use App\Models\ViajeModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -24,20 +27,20 @@ class ConductorService
      *
      * @return ConductorModel
      */
-    public function add(Conductor $conductor)
+    public function add(Persona $persona, Conductor $conductor, Vehiculo $vehiculo)
     {
         // Primero, creamos la Persona
         $personaModel = new PersonaModel;
-        $personaModel->ci = $conductor->getCi();
-        $personaModel->nombres = $conductor->getNombres();
-        $personaModel->apellidos = $conductor->getApellidos();
-        $personaModel->telefono = $conductor->getTelefono();
-        $personaModel->email = $conductor->getEmail();
-        $personaModel->usuario = $conductor->getUsuario();
-        $personaModel->password = Hash::make($conductor->getPassword()); // Encriptar la contraseña
-        $personaModel->rol = 'conductor'; // Rol fijo para conductores
-        $personaModel->billetera = $conductor->getBilletera();
-        $personaModel->deuda = $conductor->getDeuda();
+        $personaModel->ci = $persona->getCi();
+        $personaModel->nombres = $persona->getNombres();
+        $personaModel->apellidos = $persona->getApellidos();
+        $personaModel->telefono = $persona->getTelefono();
+        $personaModel->email = $persona->getEmail();
+        $personaModel->usuario = $persona->getUsuario();
+        $personaModel->password = Hash::make($persona->getPassword()); // Encriptar la contraseña
+        $personaModel->rol = 'Conductor'; // Rol fijo para conductores
+        $personaModel->billetera = $persona->getBilletera();
+        $personaModel->deuda = $persona->getDeuda();
         $personaModel->save();
 
         // Luego, creamos el Conductor
@@ -47,7 +50,14 @@ class ConductorService
         $conductorModel->disponible = $conductor->getDisponible();
         $conductorModel->save();
 
-        return $conductorModel;
+        $vehiculoModel = new VehiculoModel;
+        $vehiculoModel->conductor_id = $conductorModel->id_conductor;
+        $vehiculoModel->marca = $vehiculo->getMarca();
+        $vehiculoModel->placa = $vehiculo->getPlaca();
+        $vehiculoModel->modelo = $vehiculo->getModelo();
+        $vehiculoModel->color = $vehiculo->getColor();
+        $vehiculoModel->save();
+
     }
 
     /**
@@ -75,7 +85,7 @@ class ConductorService
                 $personaModel->password = Hash::make($conductor->getPassword());
             }
 
-            $personaModel->rol = 'conductor'; // Rol fijo para conductores
+            $personaModel->rol = 'Conductor'; // Rol fijo para conductores
             $personaModel->billetera = $conductor->getBilletera();
             $personaModel->deuda = $conductor->getDeuda();
             $personaModel->save();
@@ -92,6 +102,14 @@ class ConductorService
             }
         }
 
+    }
+
+    public function getConductor($id)
+    {
+
+        $persona = PersonaModel::find($id);
+        $conductor = ConductorModel::where('persona_id', $persona->id_persona)->first();
+        dd($conductor);
     }
 
     public function delete($id)

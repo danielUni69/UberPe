@@ -10,9 +10,8 @@ class Conductor extends Persona
 
     private $calificaciones = [];
 
-    public function __construct($ci, $nombres, $apellidos, $telefono, $email, $usuario, $password, $rol, $billetera, $licencia, $disponible = true)
+    public function __construct($licencia, $disponible)
     {
-        parent::__construct($ci, $nombres, $apellidos, $telefono, $email, $usuario, $password, $rol, $billetera);
         $this->licencia = $licencia;
         $this->disponible = $disponible;
     }
