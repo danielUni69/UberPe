@@ -84,7 +84,6 @@ class ListaPersona
             'usuario' => $usuario,
             'password' => $password,
         ];
-
         $validator = PersonaValidation::validateLogin($data);
 
         if ($validator->fails()) {

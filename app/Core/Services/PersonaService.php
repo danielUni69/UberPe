@@ -87,14 +87,14 @@ class PersonaService
             $user = Auth::user();
             session(['rol' => $user->rol]);
 
-            return $user; // Devuelve el modelo de usuario
+            return true;
         }
 
-        throw new \Exception('Credenciales incorrectas');
+        return false;
     }
 
     /**
-     * Cierra la sesión del usuario.
+     * Cierra la sesión delnusuario.
      *
      * @return \Illuminate\Http\JsonResponse
      */

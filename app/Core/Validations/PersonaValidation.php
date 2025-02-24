@@ -18,14 +18,13 @@ class PersonaValidation
             'password' => 'required|max:100',
             'rol' => 'required|in:Administrador,Conductor,Pasajero',
             'billetera' => 'numeric|min:0',
-            'deuda' => 'numeric|min:0',
         ]);
     }
 
     public static function validateEdit(array $data, $id)
     {
         return Validator::make($data, [
-            'ci' => 'required|unique:persona,ci|max:20'.$id,
+            'ci' => 'required|unique:persona,ci|max:20',
             'nombres' => 'required|max:100',
             'apellidos' => 'required|max:100',
             'telefono' => 'required|max:15',
@@ -34,7 +33,6 @@ class PersonaValidation
             'password' => 'required|max:100',
             'rol' => 'required|in:Administrador,Conductor, Pasajero',
             'billetera' => 'numeric|min:0',
-            'deuda' => 'numeric|min:0',
         ]);
     }
 
@@ -42,7 +40,7 @@ class PersonaValidation
     {
         return Validator::make($data, [
             'usuario' => 'required|string|max:50',
-            'password' => 'required|string|min:8|max:100',
+            'password' => 'required|string|min:3|max:100',
         ]);
     }
 

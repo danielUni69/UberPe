@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Core\ListaPersona;
 use App\Core\Persona;
+use App\Core\Validations\PersonaValidation;
 use Illuminate\Http\Request;
 
 class PersonaController extends Controller
@@ -17,9 +18,7 @@ class PersonaController extends Controller
 
     public function index()
     {
-        $personas = $this->listaPersona->list();
-        dd($personas, $personas[0]->convertToPersona());
-        // return view('personas.index', compact('personas'));
+        return view('viaje.servicio');
     }
 
     /**
@@ -27,8 +26,17 @@ class PersonaController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse
      */
-    public function crearUsuario(Request $request)
+    public function store(Request $request)
     {
+
+        // Validar los datos con PersonaValidation
+        $validator = PersonaValidation::validateAdd($request->all());
+        if ($validator->fails()) {
+            return redirect()->route('registro')
+                ->withErrors($validator)
+                ->withInput();
+        }
+        // Si la validación pasa, crear la persona
         $persona = new Persona(
             $request->input('ci'),
             $request->input('nombres'),
@@ -36,14 +44,14 @@ class PersonaController extends Controller
             $request->input('telefono'),
             $request->input('email'),
             $request->input('usuario'),
-            $request->input('password'),
+            bcrypt($request->input('password')), // Encriptar contraseña
             $request->input('rol'),
             $request->input('billetera')
         );
 
         $this->listaPersona->add($persona);
 
-        // return redirect()->route('')->with('success', 'Usuario creado exitosamente.');
+        return redirect()->route('viaje')->with('success', 'Usuario creado exitosamente.');
     }
 
     /**
@@ -54,6 +62,11 @@ class PersonaController extends Controller
      */
     public function showLoginForm()
     {
+        return view('auth.login');
+    }
+
+    public function showRegistroForm()
+    {
         return view('persona.registro');
     }
 
@@ -61,9 +74,8 @@ class PersonaController extends Controller
     {
         $usuario = $request->input('usuario');
         $password = $request->input('password');
-
         if ($this->listaPersona->iniciarSesion($usuario, $password)) {
-            return redirect()->route('dashboard')->with('success', 'Inicio de sesión exitoso.');
+            return redirect()->route('viaje')->with('success', 'Inicio de sesión exitoso.');
         }
 
         return back()->withErrors(['error' => 'Credenciales incorrectas.']);
