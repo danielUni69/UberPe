@@ -2,7 +2,6 @@
 
 namespace App\Core\Services;
 
-// nombres Jose daniel Basilio Nina, Marbin Mamamani, Rodrigo
 use App\Core\Persona;
 use App\Models\PersonaModel;
 use App\Models\Viaje;

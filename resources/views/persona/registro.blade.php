@@ -68,7 +68,7 @@
                             <div class="mb-3">
                                 <label class="form-label">CI</label>
                                 <input type="text" class="form-control @error('ci') is-invalid @enderror"
-                                    name="ci" >
+                                    name="ci" value="{{ old('ci') }}" >
                                 @error('ci')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
@@ -96,6 +96,15 @@
                             </div>
 
                             <div class="mb-3">
+                                <label class="form-label">Billetera</label>
+                                <input type="number" class="form-control @error('billetera') is-invalid @enderror"
+                                    name="billetera" value="{{ old('billetera') }}">
+                                @error('billetera')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3">
                                 <label class="form-label">Usuario</label>
                                 <input type="text" class="form-control @error('usuario') is-invalid @enderror"
                                     name="usuario" value="{{ old('usuario') }}">
@@ -105,10 +114,10 @@
                             </div>
 
                             <div class="mb-3">
-                                <label class="form-label">Billetera</label>
-                                <input type="number" class="form-control @error('billetera') is-invalid @enderror"
-                                    name="billetera" value="{{ old('billetera') }}">
-                                @error('billetera')
+                                <label class="form-label">Password</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                    name="password">
+                                @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>

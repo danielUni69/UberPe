@@ -102,6 +102,21 @@ class ListaPersona
         return $this->service->recargarBilletera($id, $monto);
     }
 
+    public function cambiarPass($currentPassword, $newPassword)
+    {
+        /*$data = [
+            'currentPassword' => $currentPassword,
+            'newPassword' => $newPassword,
+        ];
+
+        $validator = PersonaValidation::validateCambiarPass($data);
+
+        if ($validator->fails()) {
+            throw new ValidationException($validator);
+        }*/
+
+        return $this->service->cambiarPass($currentPassword, $newPassword);
+    }
     public function cancelarViaje()
     {
         return $this->service->cancelarViaje();

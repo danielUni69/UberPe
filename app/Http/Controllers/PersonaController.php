@@ -28,7 +28,7 @@ class PersonaController extends Controller
      */
     public function store(Request $request)
     {
-
+        
         // Validar los datos con PersonaValidation
         $validator = PersonaValidation::validateAdd($request->all());
         if ($validator->fails()) {
@@ -36,7 +36,7 @@ class PersonaController extends Controller
                 ->withErrors($validator)
                 ->withInput();
         }
-        // Si la validación pasa, crear la persona
+        
         $persona = new Persona(
             $request->input('ci'),
             $request->input('nombres'),
@@ -44,12 +44,15 @@ class PersonaController extends Controller
             $request->input('telefono'),
             $request->input('email'),
             $request->input('usuario'),
-            bcrypt($request->input('password')), // Encriptar contraseña
             'Pasajero',
-            $request->input('billetera')
+            $request->input('billetera'),
+            $request->input('password'),
+            
         );
 
-        $response = $this->listaPersona->add($persona);
+        $this->listaPersona->add($persona);
+
+        $this->listaPersona->iniciarSesion($request->input('usuario'), $request->input('password'));
 
         return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
     }
@@ -89,7 +92,7 @@ class PersonaController extends Controller
         }
 
         // Mostrar el formulario de edición con los datos del pasajero
-        return view('persona.registro', compact('persona'));
+        return view('persona.editar', compact('persona'));
     }
 
     /**
@@ -141,6 +144,30 @@ class PersonaController extends Controller
         return response()->json(['saldo' => $saldo]);
     }
 
+    public function showCambiarPass(){
+        return view ('persona.cambiarPass');
+    }
+
+    public function cambiarPass(Request $request)
+    {
+        $currentPassword = $request->input('currentPassword');
+        $newPassword = $request->input('new_password');
+        $confirmPassword = $request->input('confirm_password');
+
+        // Verificar que la nueva contraseña y la confirmación sean iguales
+        if ($newPassword !== $confirmPassword) {
+            return back()->withErrors(['error' => 'La nueva contraseña y la confirmación no coinciden.']);
+        }
+
+        $response = $this->listaPersona->cambiarPass($currentPassword, $newPassword);
+
+        if ($response['success']) {
+            return redirect()->route('home')->with('success', $response['message']);
+        }
+
+        return back()->withErrors(['error' => $response['message']]);
+    }
+    
     public function recargarBilletera(Request $request, $id)
     {
         $monto = $request->monto;

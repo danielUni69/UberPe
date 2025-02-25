@@ -15,3 +15,5 @@ Route::get('/persona/editar', [PersonaController::class, 'showEditarForm'])->nam
 Route::post('/persona/editar', [PersonaController::class, 'update'])->name('persona.editar');
 Route::get('/conductor/editar', [ConductorController::class, 'showEditConductorForm'])->name('conductor.editar');
 Route::post('/conductor/editar', [ConductorController::class, 'update'])->name('conductor.editar'); 
+Route::get('/cambiar-contrasena', [PersonaController::class, 'showCambiarPass'])->name('cambiar-contrasena');
+Route::post('/cambiar-contrasena', [PersonaController::class, 'cambiarPass'])->name('cambiar-contrasena');

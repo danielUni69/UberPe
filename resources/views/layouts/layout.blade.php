@@ -122,7 +122,7 @@
                     <a href="{{ route('conductor.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
                         Editar perfil</a>
                     <a href="#" class="submenu-item"><i class="mdi mdi-car"></i> Editar vehículo</a>
-                    <a href="#" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
+                    <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
                     
                 </div>
             @else
@@ -130,7 +130,7 @@
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('persona.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
                         Editar perfil</a>
-                    <a href="#" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
+                    <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
                 </div>
             @endif
             <a href="#"><i class="mdi mdi-history"></i> Historias de viajes</a>
