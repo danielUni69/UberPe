@@ -7,7 +7,9 @@
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css" rel="stylesheet">
-    <style>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+     <style>
         /* Estilos personalizados */
         body {
             margin: 0;
@@ -114,10 +116,10 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar">
-            <i class="mdi mdi-account-circle mdi-48px"></i>
+            <i class="mdi mdi-account-circle mdi-48px"></i>            
             <p>{{ Auth::user()->nombres }}</p>
             @if (Auth::user()->rol != 'Pasajero')
-                <a id="profile-link"><i class="mdi mdi-account"></i> Perfil</a>
+                <a id="profile-link" class="cursor-pointer"><i class="mdi mdi-account"></i> Perfil</a>
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('conductor.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
                         Editar perfil</a>

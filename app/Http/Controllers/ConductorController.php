@@ -21,6 +21,9 @@ class ConductorController extends Controller
         $this->listaPersona = new ListaPersona;
     }
 
+    public function index(){
+        return view('conductor.home');
+    }
     public function showRegistroForm()
     {
         return view('conductor.registro');
@@ -70,7 +73,7 @@ class ConductorController extends Controller
         $this->listaPersona->iniciarSesion($response->usuario, $request->input('password'));
 
         // Redirigir a la página de inicio con un mensaje de éxito
-        return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
+        return redirect()->route('home-conductor')->with('success', 'Usuario creado exitosamente.');
     }
 
     public function showEditConductorForm($id = null)
@@ -90,12 +93,13 @@ class ConductorController extends Controller
         if ($id == null) {
             $id = auth()->user()->id_persona;
         }
-
+        //dd($request);
         // Validar los datos de entrada
         $validator = ConductorValidation::validateEdit($request->all(), $id);
-
+        //dd($validator);
         // Si la validación falla, redirigir con errores
         if ($validator->fails()) {
+            dd($validator->errors());
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -121,6 +125,9 @@ class ConductorController extends Controller
         $this->listaConductor->edit($id, $persona, $conductor);
 
         // Redirigir a la página de inicio con un mensaje de éxito
-        return redirect()->route('home')->with('success', 'Usuario actualizado exitosamente.');
+        return redirect()->route('home-conductor')->with('success', 'Usuario actualizado exitosamente.');
+    }
+    public function cambiarEstado(){
+        $this->listaConductor->cambiarEstado();
     }
 }

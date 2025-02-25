@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', [PersonaController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [PersonaController::class, 'login'])->name('login');
 Route::get('/home', [PersonaController::class, 'index'])->name('home');
+Route::get('/home', [ConductorController::class, 'index'])->name('home-conductor');
 Route::get('/registro', [PersonaController::class, 'showRegistroForm'])->name('registro');
 Route::post('/registro', [PersonaController::class, 'store'])->name('registro');
 Route::get('/conductor/registrar', [ConductorController::class, 'showRegistroForm'])->name('conductor.registro');

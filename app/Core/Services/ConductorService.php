@@ -206,7 +206,19 @@ class ConductorService
 
         return ['mensaje' => 'Viaje finalizado correctamente.'];
     }
-
+ 
+    public function cambiarEstado(){
+        $persona  = Auth::user();
+        $conductor = ConductorModel::where('persona_id', $persona->id_persona)->get();
+        dd($conductor->disponible);
+        if ($conductor->disponible == false){
+            $conductor->disponible = true;
+            $conductor->save();
+        }else{
+            $conductor->disponible = false;
+            $conductor->save();
+        }
+    }
     public function confirmarPago()
     {
         $persona = Auth::user();

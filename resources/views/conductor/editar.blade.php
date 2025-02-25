@@ -118,19 +118,11 @@
                                     @enderror
                                 </div>
 
-                                <div class="mb-3 conductor-fields">
-                                    <div class="form-check">
-                                        <input class="form-check-input" type="checkbox" name="disponible"
-                                            id="disponible"
-                                            {{ old('disponible', $conductor->getDisponible()) ? 'checked' : '' }}>
-                                        <label class="form-check-label" for="disponible">
-                                            Disponible para viajes
-                                        </label>
-                                    </div>
-                                    @error('disponible')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
+                                <input type="hidden" name="disponible" value="0">
+                                <input class="form-check-input" type="checkbox" name="disponible"
+                                id="disponible" value="1"
+                                {{ old('disponible', $conductor->getDisponible()) ? 'checked' : '' }}>
+
                             @endif
                         </div>
                     </div>

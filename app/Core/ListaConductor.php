@@ -27,4 +27,7 @@ class ListaConductor
     public function edit($id, $persona, $conductor){
         return $this->service->edit($id, $persona, $conductor);
     }
+    public function cambiarEstado() {
+        return $this->service->cambiarEstado();
+    }
 }
