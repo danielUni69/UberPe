@@ -92,7 +92,11 @@ class PersonaController extends Controller
         }
 
         // Mostrar el formulario de edición con los datos del pasajero
+<<<<<<< HEAD
         return view('persona.editar', compact('persona'));
+=======
+        return redirect()->route('home')->with('success', 'Usuario actualizado exitosamente.');
+>>>>>>> 6358bc2 (validaciones)
     }
 
     /**

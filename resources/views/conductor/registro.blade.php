@@ -30,6 +30,12 @@
         .border-primary {
             border-color: #203203;
         }
+
+        .error-message {
+            color: #ff0000;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
     </style>
 </head>
 
@@ -55,20 +61,69 @@
             <div class="form-step active" data-step="1">
                 <h2 class="text-xl font-semibold text-secondary mb-4">Datos Personales</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" name="ci" placeholder="Cédula" class="p-2 border border-primary rounded">
-                    <input type="text" name="nombres" placeholder="Nombres"
-                        class="p-2 border border-primary rounded">
-                    <input type="text" name="apellidos" placeholder="Apellidos"
-                        class="p-2 border border-primary rounded">
-                    <input type="text" name="telefono" placeholder="Teléfono"
-                        class="p-2 border border-primary rounded">
-                    <input type="email" name="email" placeholder="Email" class="p-2 border border-primary rounded">
-                    <input type="text" name="usuario" placeholder="Usuario"
-                        class="p-2 border border-primary rounded">
-                    <input type="password" name="password" placeholder="Contraseña"
-                        class="p-2 border border-primary rounded">
-                    <input type="number" name="billetera" placeholder="Billetera"
-                        class="p-2 border border-primary rounded">
+                    <div>
+                        <input type="text" name="ci" placeholder="Cédula"
+                            class="p-2 border border-primary rounded w-full @error('ci') border-red-500 @enderror"
+                            value="{{ old('ci') }}">
+                        @error('ci')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="text" name="nombres" placeholder="Nombres"
+                            class="p-2 border border-primary rounded w-full @error('nombres') border-red-500 @enderror"
+                            value="{{ old('nombres') }}">
+                        @error('nombres')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="text" name="apellidos" placeholder="Apellidos"
+                            class="p-2 border border-primary rounded w-full @error('apellidos') border-red-500 @enderror"
+                            value="{{ old('apellidos') }}">
+                        @error('apellidos')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="text" name="telefono" placeholder="Teléfono"
+                            class="p-2 border border-primary rounded w-full @error('telefono') border-red-500 @enderror"
+                            value="{{ old('telefono') }}">
+                        @error('telefono')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="email" name="email" placeholder="Email"
+                            class="p-2 border border-primary rounded w-full @error('email') border-red-500 @enderror"
+                            value="{{ old('email') }}">
+                        @error('email')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="text" name="usuario" placeholder="Usuario"
+                            class="p-2 border border-primary rounded w-full @error('usuario') border-red-500 @enderror"
+                            value="{{ old('usuario') }}">
+                        @error('usuario')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="password" name="password" placeholder="Contraseña"
+                            class="p-2 border border-primary rounded w-full @error('password') border-red-500 @enderror">
+                        @error('password')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="number" name="billetera" placeholder="Billetera"
+                            class="p-2 border border-primary rounded w-full @error('billetera') border-red-500 @enderror"
+                            value="{{ old('billetera') }}">
+                        @error('billetera')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -76,12 +131,23 @@
             <div class="form-step hidden" data-step="2">
                 <h2 class="text-xl font-semibold text-secondary mb-4">Datos del Conductor</h2>
                 <div class="grid grid-cols-1 gap-4">
-                    <input type="text" name="licencia" placeholder="Licencia"
-                        class="p-2 border border-primary rounded">
-                    <select name="disponible" class="p-2 border border-primary rounded">
-                        <option value="1">Disponible</option>
-                        <option value="0">No disponible</option>
-                    </select>
+                    <div>
+                        <input type="text" name="licencia" placeholder="Licencia"
+                            class="p-2 border border-primary rounded w-full @error('licencia') border-red-500 @enderror"
+                            value="{{ old('licencia') }}">
+                        @error('licencia')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <select name="disponible" class="p-2 border border-primary rounded w-full @error('disponible') border-red-500 @enderror">
+                            <option value="1">Disponible</option>
+                            <option value="0">No disponible</option>
+                        </select>
+                        @error('disponible')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -89,10 +155,38 @@
             <div class="form-step hidden" data-step="3">
                 <h2 class="text-xl font-semibold text-secondary mb-4">Datos del Vehículo</h2>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input type="text" name="marca" placeholder="Marca" class="p-2 border border-primary rounded">
-                    <input type="text" name="modelo" placeholder="Modelo" class="p-2 border border-primary rounded">
-                    <input type="text" name="placa" placeholder="Placa" class="p-2 border border-primary rounded">
-                    <input type="text" name="color" placeholder="Color" class="p-2 border border-primary rounded">
+                    <div>
+                        <input type="text" name="marca" placeholder="Marca"
+                            class="p-2 border border-primary rounded w-full @error('marca') border-red-500 @enderror"
+                            value="{{ old('marca') }}">
+                        @error('marca')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="text" name="modelo" placeholder="Modelo"
+                            class="p-2 border border-primary rounded w-full @error('modelo') border-red-500 @enderror"
+                            value="{{ old('modelo') }}">
+                        @error('modelo')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="text" name="placa" placeholder="Placa"
+                            class="p-2 border border-primary rounded w-full @error('placa') border-red-500 @enderror"
+                            value="{{ old('placa') }}">
+                        @error('placa')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="text" name="color" placeholder="Color"
+                            class="p-2 border border-primary rounded w-full @error('color') border-red-500 @enderror"
+                            value="{{ old('color') }}">
+                        @error('color')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 

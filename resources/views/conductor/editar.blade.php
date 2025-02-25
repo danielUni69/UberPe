@@ -28,8 +28,6 @@
             background-color: #6c757d;
             color: white;
         }
-
-        
     </style>
 </head>
 
@@ -40,7 +38,6 @@
                 <h2 class="text-center">Editar Perfil</h2>
                 <form action="{{ route('conductor.editar') }}" method="POST">
                     @csrf
-                    
                     <div class="row">
                         <!-- Primera columna -->
                         <div class="col-md-6">
@@ -111,7 +108,6 @@
                             </div>
 
                             <!-- Campos específicos de conductor -->
-
                             @if (Auth::user()->rol === 'Conductor')
                                 <div class="mb-3 conductor-fields">
                                     <label class="form-label">Número de Licencia</label>

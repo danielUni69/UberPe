@@ -8,6 +8,7 @@ use App\Core\ListaPersona;
 use App\Core\Persona;
 use App\Core\Vehiculo;
 use Illuminate\Http\Request;
+use App\Core\Validations\ConductorValidation; // Importa la clase de validaciones
 
 class ConductorController extends Controller
 {
@@ -27,7 +28,15 @@ class ConductorController extends Controller
 
     public function store(Request $request)
     {
+        // Validar los datos de entrada
+        $validator = ConductorValidation::validateAdd($request->all());
 
+        // Si la validación falla, redirigir con errores
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Crear una nueva persona
         $persona = new Persona(
             $request->input('ci'),
             $request->input('nombres'),
@@ -39,20 +48,28 @@ class ConductorController extends Controller
             $request->input('billetera'),
             $request->input('password')
         );
+
+        // Crear un nuevo conductor
         $conductor = new Conductor(
             $request->input('licencia'),
-            $request->input('disponible'),
+            $request->input('disponible')
         );
+
+        // Crear un nuevo vehículo
         $vehiculo = new Vehiculo(
             $request->input('marca'),
             $request->input('modelo'),
             $request->input('placa'),
-            $request->input('color'),
+            $request->input('color')
         );
+
+        // Añadir el conductor, persona y vehículo a la lista
         $response = $this->listaConductor->add($persona, $conductor, $vehiculo);
-        
+
+        // Iniciar sesión con el nuevo usuario
         $this->listaPersona->iniciarSesion($response->usuario, $request->input('password'));
 
+        // Redirigir a la página de inicio con un mensaje de éxito
         return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
     }
 
@@ -73,6 +90,16 @@ class ConductorController extends Controller
         if ($id == null) {
             $id = auth()->user()->id_persona;
         }
+
+        // Validar los datos de entrada
+        $validator = ConductorValidation::validateEdit($request->all(), $id);
+
+        // Si la validación falla, redirigir con errores
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Crear una nueva persona con los datos actualizados
         $persona = new Persona(
             $request->input('ci'),
             $request->input('nombres'),
@@ -83,12 +110,17 @@ class ConductorController extends Controller
             'Conductor',
             $request->input('billetera')
         );
+
+        // Crear un nuevo conductor con los datos actualizados
         $conductor = new Conductor(
             $request->input('licencia'),
-            $request->input('disponible'),
+            $request->input('disponible')
         );
+
+        // Actualizar el conductor y la persona en la lista
         $this->listaConductor->edit($id, $persona, $conductor);
 
-        return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
+        // Redirigir a la página de inicio con un mensaje de éxito
+        return redirect()->route('home')->with('success', 'Usuario actualizado exitosamente.');
     }
 }

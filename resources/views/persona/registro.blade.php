@@ -32,7 +32,7 @@
             color: white;
         }
 
-        
+
     </style>
 </head>
 
@@ -40,10 +40,10 @@
     <div class="container d-flex justify-content-center">
         <div class="col-md-10">
             <div class="form-container">
-                <h2 class="text-center">Editar Perfil</h2>
+                <h2 class="text-center">Registrar</h2>
                 <form action="{{ route('registro') }}" method="POST">
                     @csrf
-                    
+
                     <div class="row">
                         <!-- Primera columna -->
                         <div class="col-md-6">

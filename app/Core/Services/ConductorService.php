@@ -37,11 +37,11 @@ class ConductorService
         $personaModel->telefono = $persona->getTelefono();
         $personaModel->email = $persona->getEmail();
         $personaModel->usuario = $persona->getUsuario();
-        $personaModel->password = Hash::make($persona->getPassword()); 
-        $personaModel->rol = 'Conductor'; 
+        $personaModel->password = Hash::make($persona->getPassword());
+        $personaModel->rol = 'Conductor';
         $personaModel->billetera = $persona->getBilletera();
         $personaModel->deuda = $persona->getDeuda();
-    
+
         $personaModel->save();
 
         // Luego, creamos el Conductor
@@ -83,7 +83,7 @@ class ConductorService
             $personaModel->usuario = $persona->getUsuario();
 
             // Si se proporciona una nueva contraseña, se encripta
-            
+
 
             $personaModel->rol = 'Conductor'; // Rol fijo para conductores
             $personaModel->billetera = $persona->getBilletera();
@@ -272,4 +272,5 @@ class ConductorService
 
         return $viajes;
     }
+
 }
