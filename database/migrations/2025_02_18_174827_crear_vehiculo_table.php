@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('modelo');
             $table->string('placa')->unique();
             $table->string('color');
+            $table->string('foto');
             $table->timestamps();
 
             // Relación con la tabla conductor

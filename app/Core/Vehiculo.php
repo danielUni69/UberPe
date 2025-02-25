@@ -14,16 +14,26 @@ class Vehiculo
 
     private $color;
 
+    private $foto;
     // colocar Conductor $conductor
-    public function __construct($marca, $modelo, $placa, $color)
+    public function __construct($marca, $modelo, $placa, $color, $foto)
     {
         // $this->conductor = $conductor;
         $this->marca = $marca;
         $this->modelo = $modelo;
         $this->placa = $placa;
         $this->color = $color;
+        $this->foto = $foto;
     }
 
+    public function getFoto()
+    {
+        return $this->foto;
+    }
+    public function setFoto($foto)
+    {
+        $this->foto = $foto;
+    }
     public function getConductor()
     {
         return $this->conductor;

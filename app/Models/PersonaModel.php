@@ -14,7 +14,7 @@ class PersonaModel extends Authenticatable
 
     protected $primaryKey = 'id_persona';
 
-    protected $fillable = ['ci', 'nombres', 'apellidos', 'telefono', 'email', 'usuario', 'password', 'rol', 'billetera', 'deuda'];
+    protected $fillable = ['ci', 'nombres', 'apellidos', 'telefono', 'email', 'usuario', 'password', 'rol', 'billetera', 'deuda', 'foto']; // Añadir 'foto' a los fillables
 
     // Sobrescribe el nombre del campo de contraseña si es diferente
     public function getAuthPassword()
@@ -36,6 +36,7 @@ class PersonaModel extends Authenticatable
             $this->billetera,
             $this->deuda,
             $this->password,
+            $this->foto 
         );
     }
 

@@ -44,7 +44,7 @@
         <h1 class="text-3xl font-bold text-primary mb-6">Registrar Conductor</h1>
 
         <!-- Formulario multi-paso -->
-        <form method="POST" action="{{ route('conductor.registro') }}" class="bg-white p-6 rounded-lg shadow-lg">
+        <form method="POST" action="{{ route('conductor.registro') }}" class="bg-white p-6 rounded-lg shadow-lg" enctype="multipart/form-data">
             @csrf
 
             <!-- Indicador de pasos -->
@@ -124,6 +124,12 @@
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>
+                    <div>
+                        <input type="file" name="foto" class="p-2 border border-primary rounded w-full @error('foto') border-red-500 @enderror">
+                        @error('foto')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
                 </div>
             </div>
 
@@ -184,6 +190,12 @@
                             class="p-2 border border-primary rounded w-full @error('color') border-red-500 @enderror"
                             value="{{ old('color') }}">
                         @error('color')
+                            <span class="error-message">{{ $message }}</span>
+                        @enderror
+                    </div>
+                    <div>
+                        <input type="file" name="foto_vehiculo" class="p-2 border border-primary rounded w-full @error('foto_vehiculo') border-red-500 @enderror">
+                        @error('foto_vehiculo')
                             <span class="error-message">{{ $message }}</span>
                         @enderror
                     </div>

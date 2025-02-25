@@ -103,7 +103,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-
+                           
                             <div class="mb-3">
                                 <label class="form-label">Usuario</label>
                                 <input type="text" class="form-control @error('usuario') is-invalid @enderror"
@@ -112,6 +112,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
+                            
 
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
@@ -123,6 +124,7 @@
                             </div>
                         </div>
                     </div>
+
 
                     <div class="row mt-3">
                         <div class="col-md-6">

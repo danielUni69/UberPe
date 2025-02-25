@@ -34,6 +34,7 @@ class PersonaService
         $personaModel->rol = $persona->getRol();
         $personaModel->billetera = $persona->getBilletera();
         $personaModel->deuda = $persona->getDeuda();
+        $personaModel->foto = $persona->getFoto(); // Añadir el atributo foto
         $personaModel->save();
 
         return $personaModel;
@@ -58,9 +59,9 @@ class PersonaService
             $personaModel->telefono = $persona->getTelefono();
             $personaModel->email = $persona->getEmail();
             $personaModel->usuario = $persona->getUsuario();
-
             $personaModel->rol = $persona->getRol();
             $personaModel->billetera = $persona->getBilletera();
+            $personaModel->foto = $persona->getFoto(); // Añadir el atributo foto
             $personaModel->save();
 
             return $personaModel;

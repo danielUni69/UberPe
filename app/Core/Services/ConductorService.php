@@ -41,6 +41,7 @@ class ConductorService
         $personaModel->rol = 'Conductor';
         $personaModel->billetera = $persona->getBilletera();
         $personaModel->deuda = $persona->getDeuda();
+        $personaModel->foto = $persona->getFoto(); // Añadir el atributo foto
 
         $personaModel->save();
 
@@ -57,6 +58,7 @@ class ConductorService
         $vehiculoModel->placa = $vehiculo->getPlaca();
         $vehiculoModel->modelo = $vehiculo->getModelo();
         $vehiculoModel->color = $vehiculo->getColor();
+        $vehiculoModel->foto = $vehiculo->getFoto();
         $vehiculoModel->save();
 
         return $personaModel;
@@ -81,13 +83,10 @@ class ConductorService
             $personaModel->telefono = $persona->getTelefono();
             $personaModel->email = $persona->getEmail();
             $personaModel->usuario = $persona->getUsuario();
-
-            // Si se proporciona una nueva contraseña, se encripta
-
-
             $personaModel->rol = 'Conductor'; // Rol fijo para conductores
             $personaModel->billetera = $persona->getBilletera();
             $personaModel->deuda = $persona->getDeuda();
+            $personaModel->foto = $persona->getFoto(); // Añadir el atributo foto
             $personaModel->save();
 
             // Actualizar los campos de Conductor
@@ -102,6 +101,7 @@ class ConductorService
             }
         }
 
+        throw new \Exception('Conductor no encontrado.');
     }
 
     public function getConductor($id)

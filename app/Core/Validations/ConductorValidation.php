@@ -22,6 +22,8 @@ class ConductorValidation
             'placa' => 'required|max:10',
             'modelo' => 'required|max:50',
             'color' => 'required|max:50',
+            'foto' => 'required|image|max:2048',
+        
         ]);
     }
 

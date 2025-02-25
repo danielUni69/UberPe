@@ -14,7 +14,7 @@ class VehiculoModel extends Model
     protected $primaryKey = 'id_vehiculo'; // Clave primaria personalizada
 
     protected $fillable = [
-        'conductor_id', 'marca', 'modelo', 'placa', 'color',
+        'conductor_id', 'marca', 'modelo', 'placa', 'color', 'foto',
     ];
 
     // Relación con ConductorModel

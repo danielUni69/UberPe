@@ -24,7 +24,9 @@ class Persona
 
     private $deuda;
 
-    public function __construct($ci, $nombres, $apellidos, $telefono, $email, $usuario, $rol, $billetera, $password = null)
+    private $foto; // Añadir atributo foto
+
+    public function __construct($ci, $nombres, $apellidos, $telefono, $email, $usuario, $rol, $billetera, $password = null, $foto = null)
     {
         $this->ci = $ci;
         $this->nombres = $nombres;
@@ -36,6 +38,7 @@ class Persona
         $this->rol = $rol;
         $this->billetera = $billetera;
         $this->deuda = 0;
+        $this->foto = $foto; // Inicializar atributo foto
     }
 
     public function getCi()
@@ -86,6 +89,16 @@ class Persona
     public function getDeuda()
     {
         return $this->deuda;
+    }
+
+    public function getFoto()
+    {
+        return $this->foto;
+    }
+
+    public function setFoto($foto)
+    {
+        $this->foto = $foto;
     }
 
     public function setTelefono($telefono)

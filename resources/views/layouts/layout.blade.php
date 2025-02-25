@@ -116,9 +116,13 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar">
-            <i class="mdi mdi-account-circle mdi-48px"></i>            
-            <p>{{ Auth::user()->nombres }}</p>
+            <div class="mb-3 ml-8 justify-content-center flex flex-col">
+                <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Foto de perfil" class="img-fluid rounded-circle w-14 h-14 ">            
+                <p class="font-bold ml-2">{{ Auth::user()->nombres }}</p>
+            </div>
+            
             @if (Auth::user()->rol != 'Pasajero')
+                <a href="{{ route('home-conductor') }}"><i class="mdi mdi-home"></i> Inicio</a>
                 <a id="profile-link" class="cursor-pointer"><i class="mdi mdi-account"></i> Perfil</a>
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('conductor.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
@@ -128,6 +132,7 @@
                     
                 </div>
             @else
+                <a href="{{ route('home') }}"><i class="mdi mdi-home"></i> Inicio</a>
                 <a id="profile-link"><i class="mdi mdi-account"></i> Perfil</a>
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('persona.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>

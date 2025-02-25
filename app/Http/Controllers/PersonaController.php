@@ -6,6 +6,7 @@ use App\Core\ListaPersona;
 use App\Core\Persona;
 use App\Core\Validations\PersonaValidation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class PersonaController extends Controller
 {
@@ -37,6 +38,12 @@ class PersonaController extends Controller
                 ->withInput();
         }
         
+        // Manejar la carga de la foto
+        $fotoPath = null;
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('fotos', 'public');
+        }
+
         $persona = new Persona(
             $request->input('ci'),
             $request->input('nombres'),
@@ -47,7 +54,7 @@ class PersonaController extends Controller
             'Pasajero',
             $request->input('billetera'),
             $request->input('password'),
-            
+            $fotoPath // Añadir ruta de la foto
         );
 
         $this->listaPersona->add($persona);
@@ -63,6 +70,18 @@ class PersonaController extends Controller
             $id = auth()->user()->id_persona;
         }
 
+        // Validar los datos de entrada
+        $validator = PersonaValidation::validateEdit($request->all(), $id);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Manejar la carga de la foto
+        $fotoPath = null;
+        if ($request->hasFile('foto')) {
+            $fotoPath = $request->file('foto')->store('fotos', 'public');
+        }
+
         $persona = new Persona(
             $request->input('ci'),
             $request->input('nombres'),
@@ -71,7 +90,9 @@ class PersonaController extends Controller
             $request->input('email'),
             $request->input('usuario'),
             'Pasajero',
-            $request->input('billetera')
+            $request->input('billetera'),
+            null,
+            $fotoPath // Añadir ruta de la foto
         );
 
         $response = $this->listaPersona->edit($persona, $id);

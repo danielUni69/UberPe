@@ -132,7 +132,7 @@
                             <button type="submit" class="btn btn-custom w-100">Guardar Cambios</button>
                         </div>
                         <div class="col-md-6">
-                            <a href="{{ route('home') }}" class="btn btn-secondary w-100">Cancelar</a>
+                            <a href="{{ route('home-conductor') }}" class="btn btn-secondary w-100">Cancelar</a>
                         </div>
                     </div>
                 </form>

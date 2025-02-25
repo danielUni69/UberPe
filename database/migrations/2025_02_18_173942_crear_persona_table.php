@@ -20,6 +20,7 @@ return new class extends Migration
             $table->decimal('billetera', 10, 2)->default(0);
             $table->decimal('deuda', 10, 2)->default(0);
             $table->enum('rol', ['Administrador', 'Conductor', 'Pasajero']);
+            $table->string('foto')->nullable(); // Añadir campo foto
             $table->timestamps();
         });
     }
