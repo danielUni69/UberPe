@@ -130,7 +130,7 @@
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('conductor.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
                         Editar perfil</a>
-                    <a href="#" class="submenu-item"><i class="mdi mdi-car"></i> Editar vehículo</a>
+                    <a href="{{ route('vehiculo.index') }}" class="submenu-item"><i class="mdi mdi-car"></i> Editar vehículo</a>
                     <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-account-key"></i> Cambiar contraseña</a>
                     
                 </div>

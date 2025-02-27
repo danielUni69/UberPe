@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ConductorController;
 use App\Http\Controllers\PersonaController;
+use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [PersonaController::class, 'showLoginForm'])->name('login');
@@ -18,3 +19,4 @@ Route::get('/conductor/editar', [ConductorController::class, 'showEditConductorF
 Route::post('/conductor/editar', [ConductorController::class, 'update'])->name('conductor.editar'); 
 Route::get('/cambiar-contrasena', [PersonaController::class, 'showCambiarPass'])->name('cambiar-contrasena');
 Route::post('/cambiar-contrasena', [PersonaController::class, 'cambiarPass'])->name('cambiar-contrasena');
+Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('vehiculo.index');

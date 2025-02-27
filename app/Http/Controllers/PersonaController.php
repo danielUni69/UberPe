@@ -137,6 +137,9 @@ class PersonaController extends Controller
         $usuario = $request->input('usuario');
         $password = $request->input('password');
         if ($this->listaPersona->iniciarSesion($usuario, $password)) {
+            if (auth()->user()->rol === 'Conductor') {
+                return redirect()->route('home-conductor')->with('success', 'Inicio de sesión exitoso.');
+            }
             return redirect()->route('home')->with('success', 'Inicio de sesión exitoso.');
         }
 
