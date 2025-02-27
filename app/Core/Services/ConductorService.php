@@ -84,7 +84,7 @@ class ConductorService
             $personaModel->email = $persona->getEmail();
             $personaModel->usuario = $persona->getUsuario();
             $personaModel->rol = 'Conductor'; // Rol fijo para conductores
-            $personaModel->billetera = $persona->getBilletera();
+            
             $personaModel->deuda = $persona->getDeuda();
             $personaModel->foto = $persona->getFoto(); // Añadir el atributo foto
             $personaModel->save();
@@ -94,7 +94,6 @@ class ConductorService
 
             if ($conductorModel) {
                 $conductorModel->licencia = $conductor->getLicencia();
-                $conductorModel->disponible = $conductor->getDisponible();
                 $conductorModel->save();
 
                 return $conductorModel;

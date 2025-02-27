@@ -10,6 +10,7 @@ use App\Core\Vehiculo;
 use Illuminate\Http\Request;
 use App\Core\Validations\ConductorValidation; // Importa la clase de validaciones
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Auth;
 
 class ConductorController extends Controller
 {
@@ -23,7 +24,10 @@ class ConductorController extends Controller
     }
 
     public function index(){
-        return view('conductor.home');
+        $conduct = $this->listaConductor->getConductor(auth()->user()->id_persona);
+        $dis = $conduct['conductor']->getDisponible();
+        return view('conductor.home', ['disponible' => $dis]);
+
     }
     public function showRegistroForm()
     {
@@ -39,15 +43,16 @@ class ConductorController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
+        //dd($request->all());
         // Manejar la carga de la foto
         $fotoPath = null;
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('fotos', 'public');
         }
         $fotoVehiculoPath = null;
+    
         if ($request->hasFile('foto_vehiculo')) {
-            $fotoVehiculoPath = $request->file('foto')->store('vehiculos', 'public');
+            $fotoVehiculoPath = $request->file('foto_vehiculo')->store('vehiculos', 'public');
         }
 
         // Crear una nueva persona
@@ -78,7 +83,7 @@ class ConductorController extends Controller
             $request->input('color'),
             $fotoVehiculoPath
         );
-
+        
         // Añadir el conductor, persona y vehículo a la lista
         $response = $this->listaConductor->add($persona, $conductor, $vehiculo);
 
@@ -117,7 +122,8 @@ class ConductorController extends Controller
         }
 
         // Manejar la carga de la foto
-        $fotoPath = null;
+        $fotoPath = Auth::user()->foto;
+        
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('fotos', 'public');
         }
@@ -131,9 +137,9 @@ class ConductorController extends Controller
             $request->input('email'),
             $request->input('usuario'),
             'Conductor',
-            $request->input('billetera'),
             null,
-            $fotoPath // Añadir ruta de la foto
+            null,
+            $fotoPath 
         );
 
         // Crear un nuevo conductor con los datos actualizados

@@ -10,28 +10,31 @@
     </div>
 
     <!-- Bottom controls -->
-    <div class="bottom-bar">
-        <img src="{{ asset('images/car.png') }}" alt="Auto" class="car-image">
-        <div class="payment-options text-center">
-            <p class="mb-1">Tipo de pago</p>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="payment" id="qr" value="qr">
-                <label class="form-check-label" for="qr">QR</label>
+    <div class="bottom-bar flex justify-between items-center">
+        <div>
+        <label class="inline-flex items-center cursor-pointer">
+  <input type="checkbox" id="toggleSwitch" class="sr-only peer" <?php echo $disponible ? 'checked' : ''; ?>>
+  <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+  <span id="toggleText" class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">
+    <?php echo $disponible ? 'Activado' : 'Desactivado'; ?>
+  </span>
+</label>
+
+            <div class="input-group mt-3"> 
+                <button class="btn btn-success">Finalizar viaje</button>
+                <button class="btn btn-danger">Reportar incidente</button>
             </div>
-            <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="payment" id="efectivo" value="efectivo">
-                <label class="form-check-label" for="efectivo">Efectivo</label>
-            </div>
         </div>
-        <div class="input-group mt-3">
-            <input type="text" class="form-control" placeholder="Ofrezca su tarifa">
-            <span class="input-group-text">Bs</span>
+        <div class="flex text-xl">
+            <p class="font-bold text-green-700 pr-3">TARIFA: </p>
+            <p class="font-bold"> 90bs</p>
         </div>
-        <div class="bg-blue-500 w-32 h-32 text-white">hola</div>
-        <div class="input-group mt-3">
-            <input type="text" class="form-control" placeholder="Ir a">
-            <button class="btn btn-success">Buscar Conductor</button>
-            <button class="btn btn-danger">Cancelar Viaje</button>
-        </div>
+        
     </div>
+<script>
+  document.getElementById("toggleSwitch").addEventListener("change", function() {
+    const textElement = document.getElementById("toggleText");
+    textElement.textContent = this.checked ? "Activado" : "Desactivado";
+  });
+</script>
 @endsection

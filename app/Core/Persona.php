@@ -26,7 +26,7 @@ class Persona
 
     private $foto; // Añadir atributo foto
 
-    public function __construct($ci, $nombres, $apellidos, $telefono, $email, $usuario, $rol, $billetera, $password = null, $foto = null)
+    public function __construct($ci, $nombres, $apellidos, $telefono, $email, $usuario, $rol, $billetera = null, $password = null, $foto = null)
     {
         $this->ci = $ci;
         $this->nombres = $nombres;

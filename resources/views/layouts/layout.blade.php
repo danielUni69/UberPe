@@ -116,10 +116,13 @@
     <div class="d-flex">
         <!-- Sidebar -->
         <div class="sidebar">
-            <div class="mb-3 ml-8 justify-content-center flex flex-col">
-                <img src="{{ asset('storage/' . Auth::user()->foto) }}" alt="Foto de perfil" class="img-fluid rounded-circle w-14 h-14 ">            
-                <p class="font-bold ml-2">{{ Auth::user()->nombres }}</p>
-            </div>
+        <div class="mb-3 ml-8 flex flex-col items-center">
+    <img src="{{ asset('storage/' . Auth::user()->foto) }}" 
+         alt="Foto de perfil" 
+         class="rounded-full w-14 h-14 object-cover">
+    <p class="font-bold mt-2">{{ Auth::user()->nombres }}</p>
+</div>
+
             
             @if (Auth::user()->rol != 'Pasajero')
                 <a href="{{ route('home-conductor') }}"><i class="mdi mdi-home"></i> Inicio</a>
@@ -128,7 +131,7 @@
                     <a href="{{ route('conductor.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
                         Editar perfil</a>
                     <a href="#" class="submenu-item"><i class="mdi mdi-car"></i> Editar vehículo</a>
-                    <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
+                    <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-account-key"></i> Cambiar contraseña</a>
                     
                 </div>
             @else

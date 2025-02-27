@@ -22,7 +22,7 @@ class ConductorValidation
             'placa' => 'required|max:10',
             'modelo' => 'required|max:50',
             'color' => 'required|max:50',
-            'foto' => 'required|image|max:2048',
+            'foto' => 'required|image|max:3048',
         
         ]);
     }
@@ -38,7 +38,6 @@ class ConductorValidation
             'usuario' => 'required|unique:persona,usuario,' . $id . ',id_persona|max:50',
             'password' => 'nullable|max:100',
             'licencia' => 'required|max:20',
-            'disponible' => 'required|boolean',
         ]);
     }
 

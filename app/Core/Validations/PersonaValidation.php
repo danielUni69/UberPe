@@ -30,7 +30,6 @@ class PersonaValidation
             'telefono' => 'required|max:15',
             'email' => 'required|email|unique:persona,email,' . $id . ',id_persona|max:100',
             'usuario' => 'required|unique:persona,usuario,' . $id . ',id_persona|max:50',
-            'billetera' => 'numeric|min:0',
             'foto' => 'nullable|image|max:2048', // Validar campo foto
         ]);
     }
