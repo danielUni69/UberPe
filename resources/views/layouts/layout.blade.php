@@ -7,6 +7,10 @@
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        #map { width: 100%; height: 500px; }
+    </style>
     <script src="https://cdn.tailwindcss.com"></script>
 
      <style>
@@ -118,9 +122,11 @@
         <!-- Sidebar -->
         <div class="sidebar">
         <div class="mb-3 ml-8 flex flex-col items-center">
-    <img src="{{ asset('storage/' . Auth::user()->foto) }}" 
-         alt="Foto de perfil" 
-         class="rounded-full w-14 h-14 object-cover">
+        @if (Auth::user()->rol != "Pasajero")
+            <img src="{{ asset('storage/' . Auth::user()->foto) }}" 
+                alt="Foto de perfil" 
+            class="rounded-full w-14 h-14 object-cover">
+        @endif
     <p class="font-bold mt-2">{{ Auth::user()->nombres }}</p>
 </div>
 

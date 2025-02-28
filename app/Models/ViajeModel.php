@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Core\Viaje;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,6 +18,11 @@ class ViajeModel extends Model
         'pasajero_id', 'conductor_id', 'origen', 'destino', 'fecha', 'metodo', 'estado', 'tarifa', 'saldo_bloqueado',
     ];
 
+    public $timestamps = true; // Habilitar campos created_at y updated_at
+
+    public function convertToViaje(){
+        return new Viaje($this->pasajero, $this->conductor, $this->origen, $this->destino, $this->fecha, $this->estado, $this->tarifa, $this->metodo, $this->saldo_bloqueado);
+    }
     // Relación con PersonaModel (Pasajero)
     public function pasajero()
     {

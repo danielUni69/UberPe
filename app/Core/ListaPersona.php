@@ -3,17 +3,20 @@
 namespace App\Core;
 
 use App\Core\Services\PersonaService;
+use App\Core\Services\ViajeService;
 use App\Core\Validations\PersonaValidation;
 use Illuminate\Validation\ValidationException;
 
 class ListaPersona
 {
     private $service;
+    private $serviceViaje;
 
     public function __construct()
     {
 
         $this->service = new PersonaService;
+        $this->serviceViaje = new ViajeService;
     }
 
     public function list()
@@ -131,5 +134,8 @@ class ListaPersona
     public function getPersona($id)
     {
         return $this->service->getPersona($id);
+    }
+    public function getViajesPasajero(){
+        return $this->serviceViaje->getViajesPasajero();
     }
 }

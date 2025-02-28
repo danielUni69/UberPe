@@ -39,10 +39,10 @@ class PersonaController extends Controller
         }
         
         // Manejar la carga de la foto
-        $fotoPath = null;
+        /*$fotoPath = null;
         if ($request->hasFile('foto')) {
             $fotoPath = $request->file('foto')->store('fotos', 'public');
-        }
+        }*/
 
         $persona = new Persona(
             $request->input('ci'),
@@ -54,7 +54,7 @@ class PersonaController extends Controller
             'Pasajero',
             $request->input('billetera'),
             $request->input('password'),
-            $fotoPath // Añadir ruta de la foto
+            //$fotoPath // Añadir ruta de la foto
         );
 
         $this->listaPersona->add($persona);
@@ -80,7 +80,8 @@ class PersonaController extends Controller
         $personaActual = $this->listaPersona->getPersona($id);
 
         // Manejar la carga de la foto
-        $fotoPath = $personaActual->foto;
+      
+        /*$fotoPath = $personaActual->foto;
         if ($request->hasFile('foto')) {
             // Eliminar la foto anterior si existe
             if ($fotoPath) {
@@ -88,7 +89,7 @@ class PersonaController extends Controller
             }
             // Guardar la nueva foto
             $fotoPath = $request->file('foto')->store('fotos', 'public');
-        }
+        }*/
 
         $persona = new Persona(
             $request->input('ci'),
@@ -100,7 +101,7 @@ class PersonaController extends Controller
             'Pasajero',
             $request->input('billetera'),
             null,
-            $fotoPath // Añadir ruta de la foto
+            //$fotoPath // Añadir ruta de la foto
         );
 
         $response = $this->listaPersona->edit($persona, $id);
