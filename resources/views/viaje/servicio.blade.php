@@ -7,15 +7,19 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font/css/materialdesignicons.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" 
+   integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
     <style>
         body {
             background-color: #dcdcdc;
             font-family: 'Poppins', sans-serif;
         }
         .sidebar {
-            width: 15%;
+            width: 16%;
             height: 100vh;
-            background-color: #263300;
+            background-color: #000000;
             color: white;
             padding-top: 20px;
             display: flex;
@@ -39,7 +43,7 @@
             background-color: #eaeaea;
         }
         .bottom-bar {
-            background-color: #5a7600;
+            background-color: #a0fb0e;
             color: white;
             padding: 15px;
             display: flex;
@@ -47,7 +51,7 @@
             align-items: center;
         }
         .btn-success {
-            background-color: #98fb98;
+            background-color: #5dade2;
             color: black;
             border: none;
             padding: 10px 20px;
@@ -59,7 +63,9 @@
             padding: 10px 20px;
         }
         .form-control {
-            background-color: #caffb9;
+            background-color: #fef9e7;
+            padding: 5px;
+            width: 5px;
             border: none;
             text-align: center;
         }
@@ -74,11 +80,18 @@
         }
         .payment-options {
             background-color: #4d6600;
-            padding: 10px;
+            padding: 5px;
             border-radius: 10px;
             margin-bottom: 10px;
         }
     </style>
+    <style>
+  #map {
+    height: px;
+  }
+</style>
+<div id="map"></div>
+
 </head>
 <body>
     <div class="d-flex">
@@ -94,9 +107,8 @@
         <!-- Main content -->
         <div class="d-flex flex-column flex-grow-1">
             <div class="map-container">
-                <iframe width="100%" height="100%" frameborder="0" style="border:0" 
-                    src="https://www.google.com/maps/embed/v1/place?key=TU_API_KEY&q=Potosi,Bolivia" allowfullscreen>
-                </iframe>
+             <iframe width="1598" height="550" src="https://www.openstreetmap.org/export/embed.html?bbox=-65.7641762495041%2C-19.582879045040155%2C-65.75521767139436%2C-19.578340374617145&amp;layer=mapnik&amp;marker=-19.58060972581435%2C-65.75969696044922" style="border: 1px solid black"></iframe><br/><small><a href="https://www.openstreetmap.org/?mlat=-19.580610&amp;mlon=-65.759697#map=18/-19.580610/-65.759697">Ver el mapa más grande</a></small>
+
             </div>
             
             <!-- Bottom controls -->

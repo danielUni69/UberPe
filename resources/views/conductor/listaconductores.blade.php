@@ -24,27 +24,49 @@
         .header {
             display: flex;
             align-items: center;
-            padding: 15px;
+            padding: 10px;
         }
         .avatar {
-            width: 40px;
-            height: 40px;
+            width: 70px;
+            height: 70px;
             background-color: #B599D5;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: bold;
-            color: white;
+            overflow: hidden;
             margin-right: 10px;
         }
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        .text-start {
+            text-align: left;
+        }
         .btn-custom {
-            background-color: #6D4B86;
+            background-color:#7e57c2;
             color: white;
             border: none;
+            font-size: 12px; 
+        }
+        .btn-light{
+            background-color: #a0fb0e;
+            color: white;
+            border: none;
+            font-size: 12px; 
         }
         .btn-custom:hover {
             background-color: #5C3C72;
+        }
+        p {
+            margin-bottom: 4px; 
+            font-size: 12px; 
+        }
+        .card-body strong {
+            margin-right: 4px; 
+            
         }
     </style>
 </head>
@@ -54,78 +76,75 @@
         <div class="card-container">
             <div class="card">
                 <div class="header">
-                    <div class="avatar">A</div>
-                    <div>
-                        <strong>Header</strong><br>
-                        <small>Subhead</small>
+                    <div class="avatar">
+                        <img src="tu-imagen.jpg" alt="Avatar">
+                    </div>
+                    <div class="text-start">
+                        <p><strong>Nombre:</strong> Pedro</p>
+                        <p><strong>Apellido:</strong> Perez</p>
+                    </div>
+                </div>
+                <img src="" class="card-img-top" alt="Carro">
+                <div class="card-body text-start">
+                    <p><strong>Ci:</strong>156165</p>
+                    <p><strong>Teléfono:</strong>515846</p>
+                    <p><strong>Email:</strong>pedro@gmail.com</p>
+                    <p><strong>Licencia:</strong>5616546</p>
+                    <p><strong>Vehículo:</strong>Automóvil</p>
+                    <p><strong>Marca:</strong>Tesla</p>
+                    <p><strong>Placa:</strong>3656PHP</p>
+                    <p><strong>Color:</strong>Blanco</p>
+                    <button class="btn btn-light">Habilitar</button>
+                    <button class="btn btn-custom">Inhabilitar</button>
+                </div>
+            </div>
+           <div class="card">
+                <div class="header">
+                    <div class="avatar">
+                        <img src="tu-imagen.jpg" alt="Avatar">
+                    </div>
+                    <div class="text-start">
+                        <p><strong>Nombre:</strong> Pedro</p>
+                        <p><strong>Apellido:</strong> Perez</p>
                     </div>
                 </div>
                 <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Carro">
-                <div class="card-body">
-                    <p><strong>Nombre:</strong> Pedro</p>
-                    <p><strong>Apellido:</strong> Picaflor</p>
-                    <p><strong>Ci:</strong> 156165</p>
-                    <p><strong>Teléfono:</strong> 515846</p>
-                    <p><strong>Email:</strong> pedro@gmail.com</p>
-                    <p><strong>Licencia:</strong> 5616546</p>
-                    <p><strong>Vehículo:</strong> Automóvil</p>
-                    <p><strong>Marca:</strong> Tesla</p>
-                    <p><strong>Placa:</strong> 3656PHP</p>
-                    <p><strong>Color:</strong> Blanco</p>
+                <div class="card-body text-start">
+                    <p><strong>Ci:</strong>156165</p>
+                    <p><strong>Teléfono:</strong>515846</p>
+                    <p><strong>Email:</strong>pedro@gmail.com</p>
+                    <p><strong>Licencia:</strong>5616546</p>
+                    <p><strong>Vehículo:</strong>Automóvil</p>
+                    <p><strong>Marca:</strong>Tesla</p>
+                    <p><strong>Placa:</strong>3656PHP</p>
+                    <p><strong>Color:</strong>Blanco</p>
                     <button class="btn btn-light">Habilitar</button>
                     <button class="btn btn-custom">Inhabilitar</button>
                 </div>
             </div>
             <div class="card">
                 <div class="header">
-                    <div class="avatar">A</div>
-                    <div>
-                        <strong>Header</strong><br>
-                        <small>Subhead</small>
+                    <div class="avatar">
+                        <img src="tu-imagen.jpg" alt="Avatar">
+                    </div>
+                    <div class="text-start">
+                        <p><strong>Nombre:</strong> Pedro</p>
+                        <p><strong>Apellido:</strong> Perez</p>
                     </div>
                 </div>
                 <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Carro">
-                <div class="card-body">
-                    <p><strong>Nombre:</strong> Pedro</p>
-                    <p><strong>Apellido:</strong> Picaflor</p>
-                    <p><strong>Ci:</strong> 156165</p>
-                    <p><strong>Teléfono:</strong> 515846</p>
-                    <p><strong>Email:</strong> pedro@gmail.com</p>
-                    <p><strong>Licencia:</strong> 5616546</p>
-                    <p><strong>Vehículo:</strong> Automóvil</p>
-                    <p><strong>Marca:</strong> Tesla</p>
-                    <p><strong>Placa:</strong> 3656PHP</p>
-                    <p><strong>Color:</strong> Blanco</p>
+                <div class="card-body text-start">
+                    <p><strong>Ci:</strong>156165</p>
+                    <p><strong>Teléfono:</strong>515846</p>
+                    <p><strong>Email:</strong>pedro@gmail.com</p>
+                    <p><strong>Licencia:</strong>5616546</p>
+                    <p><strong>Vehículo:</strong>Automóvil</p>
+                    <p><strong>Marca:</strong>Tesla</p>
+                    <p><strong>Placa:</strong>3656PHP</p>
+                    <p><strong>Color:</strong>Blanco</p>
                     <button class="btn btn-light">Habilitar</button>
                     <button class="btn btn-custom">Inhabilitar</button>
                 </div>
             </div>
-            <div class="card">
-                <div class="header">
-                    <div class="avatar">A</div>
-                    <div>
-                        <strong>Header</strong><br>
-                        <small>Subhead</small>
-                    </div>
-                </div>
-                <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Carro">
-                <div class="card-body">
-                    <p><strong>Nombre:</strong> Pedro</p>
-                    <p><strong>Apellido:</strong> Picaflor</p>
-                    <p><strong>Ci:</strong> 156165</p>
-                    <p><strong>Teléfono:</strong> 515846</p>
-                    <p><strong>Email:</strong> pedro@gmail.com</p>
-                    <p><strong>Licencia:</strong> 5616546</p>
-                    <p><strong>Vehículo:</strong> Automóvil</p>
-                    <p><strong>Marca:</strong> Tesla</p>
-                    <p><strong>Placa:</strong> 3656PHP</p>
-                    <p><strong>Color:</strong> Blanco</p>
-                    <button class="btn btn-light">Habilitar</button>
-                    <button class="btn btn-custom">Inhabilitar</button>
-                </div>
-            </div>
-        </div>
-        <button class="btn btn-dark mt-3">Atrás</button>
-    </div>
-</body>
+          </body>
 </html>
