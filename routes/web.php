@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\ConductorController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\VehiculoController;
@@ -20,3 +21,8 @@ Route::post('/conductor/editar', [ConductorController::class, 'update'])->name('
 Route::get('/cambiar-contrasena', [PersonaController::class, 'showCambiarPass'])->name('cambiar-contrasena');
 Route::post('/cambiar-contrasena', [PersonaController::class, 'cambiarPass'])->name('cambiar-contrasena');
 Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('vehiculo.index');
+Route::get('/admin/home', [AdministradorController::class, 'index'])->name('admin.home');
+Route::get('/admin/edit', [AdministradorController::class, 'showEditForm'])->name('admin.edit');
+Route::get('/admin/conductores', [AdministradorController::class, 'showConductores'])->name('admin.conductores');
+Route::get('/admin/pasajeros', [AdministradorController::class, 'showPasajeros'])->name('admin.pasajeros');
+Route::post('/logout', [PersonaController::class, 'logout'])->name('logout');

@@ -20,11 +20,11 @@ class AdministradorSeeder extends Seeder
             'telefono' => '123456789',
             'email' => 'juan.admin@example.com',
             'usuario' => 'juan',
-
             'password' => Hash::make('admin123'),
             'billetera' => 1000,
             'deuda' => 0,
             'rol' => 'Administrador',
+            'foto' => 'fotos/juan.jpg',
         ]);
     }
 }

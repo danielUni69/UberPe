@@ -2,17 +2,23 @@
 
 namespace App\Core;
 
-use App\Core\Services\ConductorService;
+use App\Core\Services\VehiculoService;
 
-class ListaConductor
+class ListaVehiculo
 {
     private $service;
 
     public function __construct()
     {
-
-        $this->service = new ConductorService;
+        $this->service = new VehiculoService;
     }
-
+    public function getVehiculo()
+    {
+        return $this->service->getVehiculo();
+    }
+    public function editVehiculo(Vehiculo $vehiculo)
+    {
+        $this->service->edit($vehiculo);
+    }
     
 }

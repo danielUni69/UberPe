@@ -2,57 +2,71 @@
 
 namespace App\Livewire;
 
+use App\Core\ListaVehiculo;
+use App\Core\Vehiculo;
 use App\Models\ConductorModel;
 use App\Models\VehiculoModel;
 use Livewire\Component;
 use Livewire\WithFileUploads;
-use App\Core\ListaConductor;
+
 class VehiculoCrud extends Component
 {
     use WithFileUploads;
 
-    
+    protected $listaVehiculo;
+    protected $vehiculo;
+
 
     public $vehiculos;
-    public $conductores;
+    
+    public $marca;
+    public $modelo;
+    public $placa;
+    public $color;
+    public $foto;
+    public $foto_temp;
 
     
-    public $isEdit = false;
 
-    // Inicializar el componente
-    public function mount(ListaConductor $listaConductor)
+    public $isEdit = true;
+
+    public function mount()
     {
-        $this->vehiculos = VehiculoModel::all();
-        $this->conductores = ConductorModel::all();
+        $this->listaVehiculo = new ListaVehiculo;
+        $this->vehiculo = $this->listaVehiculo->getVehiculo();  
+        $this->marca = $this->vehiculo->getMarca();
+        $this->modelo = $this->vehiculo->getModelo();
+        $this->placa = $this->vehiculo->getPlaca();
+        $this->color = $this->vehiculo->getColor();
+        $this->foto_temp = $this->vehiculo->getFoto();
     }
 
-    public function edit($id)
+    public function save($id = null)
     {
-        $vehiculo = VehiculoModel::find($id);
-        $this->vehiculo_id = $vehiculo->id_vehiculo;
-        $this->conductor_id = $vehiculo->conductor_id;
-        $this->marca = $vehiculo->marca;
-        $this->modelo = $vehiculo->modelo;
-        $this->placa = $vehiculo->placa;
-        $this->color = $vehiculo->color;
-        $this->foto_temp = $vehiculo->foto;
-        $this->isEdit = true;
+        $this->listaVehiculo = new ListaVehiculo;
+        $vehiEdit = new Vehiculo(
+            $this->marca,
+            $this->modelo,
+            $this->placa,
+            $this->color,
+            $this->foto_temp
+        );    
+        $this->listaVehiculo->editVehiculo($vehiEdit);
+        return redirect()->route('home-conductor')->with('success', 'Vehiculo actualizado exitosamente.');
     }
 
-    // Eliminar un vehículo
     public function delete($id)
     {
         VehiculoModel::find($id)->delete();
         $this->vehiculos = VehiculoModel::all();
     }
 
-    // Reiniciar el formulario
+    
     public function resetForm()
     {
         $this->reset(['vehiculo_id', 'conductor_id', 'marca', 'modelo', 'placa', 'color', 'foto', 'foto_temp', 'isEdit']);
     }
 
-    // Renderizar la vista
     public function render()
     {
         return view('livewire.vehiculo-crud');

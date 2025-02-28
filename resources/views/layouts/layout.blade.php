@@ -110,6 +110,7 @@
             margin-top: 5px;
         }
     </style>
+    @livewireStyles
 </head>
 
 <body>
@@ -124,7 +125,7 @@
 </div>
 
             
-            @if (Auth::user()->rol != 'Pasajero')
+            @if (Auth::user()->rol != 'Pasajero' && Auth::user()->rol != 'Administrador')
                 <a href="{{ route('home-conductor') }}"><i class="mdi mdi-home"></i> Inicio</a>
                 <a id="profile-link" class="cursor-pointer"><i class="mdi mdi-account"></i> Perfil</a>
                 <div class="profile-submenu" id="profile-submenu">
@@ -134,7 +135,7 @@
                     <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-account-key"></i> Cambiar contraseña</a>
                     
                 </div>
-            @else
+            @elseif (Auth::user()->rol == 'Pasajero')
                 <a href="{{ route('home') }}"><i class="mdi mdi-home"></i> Inicio</a>
                 <a id="profile-link"><i class="mdi mdi-account"></i> Perfil</a>
                 <div class="profile-submenu" id="profile-submenu">
@@ -143,12 +144,30 @@
                     <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
                 </div>
             @endif
+            @if (Auth::user()->rol == 'Administrador')
+                <a id="profile-link"><i class="mdi mdi-account"></i> Perfil</a>
+                <div class="profile-submenu" id="profile-submenu">
+                    <a href="{{ route('admin.edit') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
+                        Editar perfil</a>
+                    <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
+                </div>
+                <a href="{{ route('admin.home') }}"><i class="mdi mdi-account-group"></i> Administración</a>
+                <a href="{{ route('admin.conductores') }}"><i class="mdi mdi-account"></i> Conductores</a>
+                <a href="{{ route('admin.pasajeros') }}"><i class="mdi mdi-account-multiple"></i> Pasajeros</a>
+            @endif           
             <a href="#"><i class="mdi mdi-history"></i> Historias de viajes</a>
             <a href="#"><i class="mdi mdi-alert-circle"></i> Incidencias</a>
+            <form action="{{ route('logout') }}" method="POST">
+            @csrf
+                <button type="submit">
+                    <i class="mdi mdi-logout"></i> Cerrar sesión
+                </button>
+            </form>
+
         </div>
         <!-- Main content -->
         <div class="main-content">
-            @yield('content') <!-- Aquí se insertará el contenido específico de cada vista -->
+            @yield('content') 
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -164,6 +183,8 @@
             });
         });
     </script>
+    @livewireScripts
+
 </body>
 
 </html>

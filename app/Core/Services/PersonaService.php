@@ -97,7 +97,7 @@ class PersonaService
         Auth::logout();
         session()->forget('rol');
 
-        return true; // Indica que la sesión se cerró correctamente
+        return true; 
     }
 
     public function cambiarPass($currentPassword, $newPassword)

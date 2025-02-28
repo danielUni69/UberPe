@@ -220,6 +220,11 @@ class ConductorService
 
         return $conductor->disponible; 
     }
+    public function verEstado(){
+        $persona = Auth::user();
+        $conductor = ConductorModel::where('persona_id', $persona->id_persona)->first();
+        return $conductor->disponible;
+    }
 
     public function confirmarPago()
     {

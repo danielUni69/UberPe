@@ -76,9 +76,17 @@ class PersonaController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
+        // Obtener la persona actual
+        $personaActual = $this->listaPersona->getPersona($id);
+
         // Manejar la carga de la foto
-        $fotoPath = null;
+        $fotoPath = $personaActual->foto;
         if ($request->hasFile('foto')) {
+            // Eliminar la foto anterior si existe
+            if ($fotoPath) {
+                Storage::disk('public')->delete($fotoPath);
+            }
+            // Guardar la nueva foto
             $fotoPath = $request->file('foto')->store('fotos', 'public');
         }
 
@@ -140,6 +148,9 @@ class PersonaController extends Controller
             if (auth()->user()->rol === 'Conductor') {
                 return redirect()->route('home-conductor')->with('success', 'Inicio de sesión exitoso.');
             }
+            elseif (auth()->user()->rol === 'Administrador') {
+                return redirect()->route('admin.home')->with('success', 'Inicio de sesión exitoso.');
+            }
             return redirect()->route('home')->with('success', 'Inicio de sesión exitoso.');
         }
 
@@ -158,7 +169,7 @@ class PersonaController extends Controller
     {
         $this->listaPersona->cerrarSesion();
 
-        return redirect()->route('login')->with('success', 'Sesión cerrada correctamente.');
+        return view('auth.login');
     }
 
     public function verBilletera($id)

@@ -30,4 +30,7 @@ class ListaConductor
     public  function cambiarEstado() {
         return  $this->service->cambiarEstado();
     }
+    public function verEstado(){
+        return $this->service->verEstado();
+    }
 }

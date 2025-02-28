@@ -15,7 +15,7 @@ class CambiarEstado extends Component
     {
         $this->listaConductorService = $listaConductorService;
         
-        $this->disponible = $this->listaConductorService->cambiarEstado();
+        $this->disponible = $this->listaConductorService->verEstado();
     }
 
     public function cambiarEstado()

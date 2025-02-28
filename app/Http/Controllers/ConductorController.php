@@ -110,14 +110,12 @@ class ConductorController extends Controller
     {
         if ($id == null) {
             $id = auth()->user()->id_persona;
-        }
-        //dd($request);
+        }   
         // Validar los datos de entrada
         $validator = ConductorValidation::validateEdit($request->all(), $id);
-        //dd($validator);
+
         // Si la validación falla, redirigir con errores
         if ($validator->fails()) {
-            dd($validator->errors());
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -125,6 +123,10 @@ class ConductorController extends Controller
         $fotoPath = Auth::user()->foto;
         
         if ($request->hasFile('foto')) {
+            // Eliminar la foto anterior si existe
+            if ($fotoPath) {
+                Storage::disk('public')->delete($fotoPath);
+            }
             $fotoPath = $request->file('foto')->store('fotos', 'public');
         }
 
