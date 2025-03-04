@@ -123,23 +123,24 @@
         <div class="sidebar">
         <div class="mb-3 ml-8 flex flex-col items-center">
         @if (Auth::user()->rol != "Pasajero")
-            <img src="{{ asset('storage/' . Auth::user()->foto) }}" 
-                alt="Foto de perfil" 
+            <img src="{{ asset('storage/' . Auth::user()->foto) }}"
+                alt="Foto de perfil"
             class="rounded-full w-14 h-14 object-cover">
         @endif
     <p class="font-bold mt-2">{{ Auth::user()->nombres }}</p>
 </div>
 
-            
+
             @if (Auth::user()->rol != 'Pasajero' && Auth::user()->rol != 'Administrador')
                 <a href="{{ route('home-conductor') }}"><i class="mdi mdi-home"></i> Inicio</a>
                 <a id="profile-link" class="cursor-pointer"><i class="mdi mdi-account"></i> Perfil</a>
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('conductor.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
-                        Editar perfil</a>
+                        Editar perfila</a>
+                    <a href="{{ route('admin.registro') }}" class="submenu-item"><i class="mdi mdi-account-plus"></i> Registrarse</a>
                     <a href="{{ route('vehiculo.index') }}" class="submenu-item"><i class="mdi mdi-car"></i> Editar vehículo</a>
                     <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-account-key"></i> Cambiar contraseña</a>
-                    
+
                 </div>
             @elseif (Auth::user()->rol == 'Pasajero')
                 <a href="{{ route('home') }}"><i class="mdi mdi-home"></i> Inicio</a>
@@ -155,12 +156,14 @@
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('admin.edit') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
                         Editar perfil</a>
+                        <a href="{{ route('admin.registro') }}" class="submenu-item"><i class="mdi mdi-account-plus"></i> Registrarse</a>
                     <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
+
                 </div>
                 <a href="{{ route('admin.home') }}"><i class="mdi mdi-account-group"></i> Administración</a>
                 <a href="{{ route('admin.conductores') }}"><i class="mdi mdi-account"></i> Conductores</a>
                 <a href="{{ route('admin.pasajeros') }}"><i class="mdi mdi-account-multiple"></i> Pasajeros</a>
-            @endif           
+            @endif
             <a href="#"><i class="mdi mdi-history"></i> Historias de viajes</a>
             <a href="#"><i class="mdi mdi-alert-circle"></i> Incidencias</a>
             <form action="{{ route('logout') }}" method="POST">
@@ -173,7 +176,7 @@
         </div>
         <!-- Main content -->
         <div class="main-content">
-            @yield('content') 
+            @yield('content')
         </div>
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
