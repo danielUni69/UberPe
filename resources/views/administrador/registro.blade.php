@@ -8,7 +8,7 @@
     <div class="w-full max-w-4xl bg-[#c5ff7d] p-8 rounded-lg shadow-lg">
         <h2 class="text-2xl font-bold text-center mb-6">Registrar Administrador</h2>
 
-        <form action="{{ route('admin.registro') }}" method="GET">
+        <form action="{{ route('registro') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -72,12 +72,21 @@
                             class="w-full p-2 border rounded focus:ring focus:ring-green-300 @error('password_confirmation') border-red-500 @enderror">
                         @error('password_confirmation') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                     </div>
+
+                    <div class="mb-4">
+                        <label class="block font-medium">Rol</label>
+                        <select name="rol" class="w-full p-2 border rounded focus:ring focus:ring-green-300 @error('rol') border-red-500 @enderror">
+                            <option value="Administrador">Administrador</option>
+
+                        </select>
+                        @error('rol') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
+                    </div>
                 </div>
             </div>
 
             <!-- Botones -->
             <div class="flex gap-4 mt-6">
-                <a href="{{ route('admin.home') }}" class="w-1/2 text-center bg-gray-600 text-white py-2 rounded hover:bg-red-700 transition">Cancelar</a>
+                <a href="{{ route('home') }}" class="w-1/2 text-center bg-gray-600 text-white py-2 rounded hover:bg-red-700 transition">Cancelar</a>
                 <button type="submit" class="w-1/2 bg-black text-white py-2 rounded hover:bg-green-800 transition">Registrar</button>
             </div>
         </form>

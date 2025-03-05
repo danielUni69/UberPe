@@ -103,7 +103,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                           
+
                             <div class="mb-3">
                                 <label class="form-label">Usuario</label>
                                 <input type="text" class="form-control @error('usuario') is-invalid @enderror"
@@ -112,7 +112,7 @@
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
-                            
+
 
                             <div class="mb-3">
                                 <label class="form-label">Password</label>
@@ -121,6 +121,14 @@
                                 @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
+                            </div>
+                            <div class="mb-3">
+                                <label class="block font-medium">Rol</label>
+                                <select name="rol" class="w-full p-2 border rounded focus:ring focus:ring-green-300 @error('rol') border-red-500 @enderror">
+                                    <option value="Pasajero">Pasajero</option>
+
+                                </select>
+                                @error('rol') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                             </div>
                         </div>
                     </div>

@@ -28,42 +28,43 @@ class PersonaController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
-    {
-        
-        // Validar los datos con PersonaValidation
-        $validator = PersonaValidation::validateAdd($request->all());
-        if ($validator->fails()) {
-            return redirect()->route('registro')
-                ->withErrors($validator)
-                ->withInput();
-        }
-        
-        // Manejar la carga de la foto
-        /*$fotoPath = null;
-        if ($request->hasFile('foto')) {
-            $fotoPath = $request->file('foto')->store('fotos', 'public');
-        }*/
-
-        $persona = new Persona(
-            $request->input('ci'),
-            $request->input('nombres'),
-            $request->input('apellidos'),
-            $request->input('telefono'),
-            $request->input('email'),
-            $request->input('usuario'),
-            'Pasajero',
-            $request->input('billetera'),
-            $request->input('password'),
-            //$fotoPath // Añadir ruta de la foto
-        );
-
-        $this->listaPersona->add($persona);
-
-        $this->listaPersona->iniciarSesion($request->input('usuario'), $request->input('password'));
-
-        return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
+{
+    // Validar los datos con PersonaValidation
+    $validator = PersonaValidation::validateAdd($request->all());
+    if ($validator->fails()) {
+        return redirect()->route('registro')
+            ->withErrors($validator)
+            ->withInput();
     }
 
+    // Manejar la carga de la foto (opcional)
+    /*$fotoPath = null;
+    if ($request->hasFile('foto')) {
+        $fotoPath = $request->file('foto')->store('fotos', 'public');
+    }*/
+
+    // Crear una nueva instancia de Persona
+    $persona = new Persona(
+        $request->input('ci'), // CI
+        $request->input('nombres'), // Nombres
+        $request->input('apellidos'), // Apellidos
+        $request->input('telefono'), // Teléfono
+        $request->input('email'), // Email
+        $request->input('usuario'), // Usuario
+        $request->input('rol', 'Pasajero'), // Rol (si no se proporciona, se asigna 'Pasajero' por defecto)
+        $request->input('billetera', 0.00), // Billetera (valor predeterminado 0.00)
+        $request->input('password'), // Contraseña
+        null // Foto (opcional)
+    );
+
+    // Guardar la persona en la base de datos
+    $this->listaPersona->add($persona);
+
+    // Iniciar sesión con el nuevo usuario
+    $this->listaPersona->iniciarSesion($request->input('usuario'), $request->input('password'));
+
+    return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
+}
     public function update(Request $request, $id = null)
     {
         if ($id == null) {
@@ -80,7 +81,7 @@ class PersonaController extends Controller
         $personaActual = $this->listaPersona->getPersona($id);
 
         // Manejar la carga de la foto
-      
+
         /*$fotoPath = $personaActual->foto;
         if ($request->hasFile('foto')) {
             // Eliminar la foto anterior si existe
@@ -98,8 +99,8 @@ class PersonaController extends Controller
             $request->input('telefono'),
             $request->input('email'),
             $request->input('usuario'),
-            'Pasajero',
-            $request->input('billetera'),
+            $request->input('rol', 'Pasajero'),
+            $request->input('billetera',0.00),
             null,
             //$fotoPath // Añadir ruta de la foto
         );
@@ -123,6 +124,8 @@ class PersonaController extends Controller
 
         // Mostrar el formulario de edición con los datos del pasajero
         return view('persona.editar', compact('persona'));
+        return view('administrador.editar', compact('persona'));
+
     }
 
     /**
@@ -203,7 +206,7 @@ class PersonaController extends Controller
 
         return back()->withErrors(['error' => $response['message']]);
     }
-    
+
     public function recargarBilletera(Request $request, $id)
     {
         $monto = $request->monto;

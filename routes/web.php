@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Persona;
 use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\ConductorController;
 use App\Http\Controllers\PersonaController;
@@ -22,8 +23,9 @@ Route::get('/cambiar-contrasena', [PersonaController::class, 'showCambiarPass'])
 Route::post('/cambiar-contrasena', [PersonaController::class, 'cambiarPass'])->name('cambiar-contrasena');
 Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('vehiculo.index');
 Route::get('/admin/home', [AdministradorController::class, 'index'])->name('admin.home');
-Route::get('/admin/edit', [AdministradorController::class, 'showEditForm'])->name('admin.edit');
-Route::get('/admin/conductores', [AdministradorController::class, 'showConductores'])->name('admin.conductores');
+Route::post('/admin/editar', [AdministradorController::class, 'update'])->name('admin.editar');
+Route::get('/admin/editar', [PersonaController::class, 'showEditarForm'])->name('admin.editar');
+Route::get('/admin/conductores', [PersonaController::class, 'showConductores'])->name('admin.conductores');
 Route::get('/admin/pasajeros', [AdministradorController::class, 'showPasajeros'])->name('admin.pasajeros');
 Route::get('/admin/registro', [AdministradorController::class, 'showRegistroForm'])->name('admin.registro');
 Route::post('/admin/registro', [AdministradorController::class, 'store'])->name('admin.registro');

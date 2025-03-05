@@ -137,7 +137,7 @@
                 <div class="profile-submenu" id="profile-submenu">
                     <a href="{{ route('conductor.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
                         Editar perfila</a>
-                    <a href="{{ route('admin.registro') }}" class="submenu-item"><i class="mdi mdi-account-plus"></i> Registrarse</a>
+
                     <a href="{{ route('vehiculo.index') }}" class="submenu-item"><i class="mdi mdi-car"></i> Editar vehículo</a>
                     <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-account-key"></i> Cambiar contraseña</a>
 
@@ -154,9 +154,8 @@
             @if (Auth::user()->rol == 'Administrador')
                 <a id="profile-link"><i class="mdi mdi-account"></i> Perfil</a>
                 <div class="profile-submenu" id="profile-submenu">
-                    <a href="{{ route('admin.edit') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i>
-                        Editar perfil</a>
-                        <a href="{{ route('admin.registro') }}" class="submenu-item"><i class="mdi mdi-account-plus"></i> Registrarse</a>
+                    <a href="{{ route('admin.editar') }} " class="submenu-item"><i class="mdi mdi-account-edit"></i> Editar perfil</a>
+                    <a href="{{ route('admin.registro') }}" class="submenu-item"><i class="mdi mdi-account-plus"></i> Registrarse</a>
                     <a href="{{ route('cambiar-contrasena') }}" class="submenu-item"><i class="mdi mdi-car"></i>Cambiar contraseña</a>
 
                 </div>
