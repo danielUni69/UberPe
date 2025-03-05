@@ -239,4 +239,40 @@ class PersonaService
     }
 }
 
+    public function verTarifa(){
+        $user = Auth::user();
+        if($user->rol == "Pasajero"){
+            $viaje = ViajeModel::where('pasajero_id', $user->id_persona)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        } else {
+            $viaje = ViajeModel::where('conductor_id', $user->conductor->id_conductor)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        }
+        
+        if ($viaje) {
+            return $viaje->tarifa;
+        }else {
+            return 'No hay viajes';
+        }
+    }
+    public function verMetodo(){
+        $user = Auth::user();
+        if($user->rol == "Pasajero"){
+            $viaje = ViajeModel::where('pasajero_id', $user->id_persona)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        } else {
+            $viaje = ViajeModel::where('conductor_id', $user->conductor->id_conductor)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        }
+        if ($viaje) {
+            return $viaje->metodo;
+        }else {
+            return 'No hay viajes';
+        }
+    }
+
 }

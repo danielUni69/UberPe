@@ -12,7 +12,7 @@
         </div>
     </div>
     <!-- Bottom controls -->
-    <div class="bottom-bar flex justify-between items-center">
+    <div class="bottom-bar flex-col justify-between items-center">
         <div>
             @livewire('cambiar-estado')
             @livewire('pasajero-live')
@@ -21,11 +21,7 @@
                 <button class="btn btn-danger">Reportar incidente</button>
                 @livewire('cancelar-viaje')
             </div>
-        </div>
-        <div class="flex text-xl">
-            <p class="font-bold text-green-700 pr-3">TARIFA: </p>
-            <p class="font-bold"> 90bs</p>
-        </div>
+        </div>        
     </div>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
@@ -35,7 +31,6 @@
         attribution: '© OpenStreetMap contributors'
     }).addTo(map);
 
-    // Escuchar el evento de solicitud seleccionada
     Livewire.on('solicitudSeleccionada', (solicitud) => {
         console.log('Solicitud recibida:', solicitud);
 
@@ -47,10 +42,8 @@
             return;
         }
 
-        // Limpiar el mapa
         clearMap();
 
-        // Geocodificar origen y destino
         geocode(origen, function (coordsOrigen) {
             if (coordsOrigen) {
                 L.marker(coordsOrigen).addTo(map).bindPopup('Origen: ' + origen).openPopup();
@@ -62,15 +55,16 @@
                         drawRoute(coordsOrigen, coordsDestino);
                     } else {
                         console.error('No se pudo geocodificar el destino:', destino);
+                        alert('No se pudo encontrar el destino. Verifica la dirección e intenta nuevamente.');
                     }
                 });
             } else {
                 console.error('No se pudo geocodificar el origen:', origen);
+                alert('No se pudo encontrar el origen. Verifica la dirección e intenta nuevamente.');
             }
         });
     });
 
-    // Escuchar el evento de cancelación de viaje
     Livewire.on('viajeCancelado', () => {
         clearMap();
     });
@@ -84,25 +78,51 @@
     }
 
     function geocode(address, callback) {
+        console.log('Geocodificando dirección:', address);
         fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(address)}`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud: ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Respuesta de geocodificación:', data);
                 if (data.length > 0) {
                     callback({ lat: parseFloat(data[0].lat), lng: parseFloat(data[0].lon) });
                 } else {
+                    console.error('No se encontraron resultados para:', address);
                     callback(null);
                 }
+            })
+            .catch(error => {
+                console.error('Error en la geocodificación:', error);
+                callback(null);
             });
     }
 
     function drawRoute(origin, destination) {
         fetch(`https://router.project-osrm.org/route/v1/driving/${origin.lng},${origin.lat};${destination.lng},${destination.lat}?overview=full&geometries=geojson`)
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Error en la solicitud de ruta: ' + response.statusText);
+                }
+                return response.json();
+            })
             .then(data => {
-                var routeCoordinates = data.routes[0].geometry.coordinates;
-                var latLngs = routeCoordinates.map(coord => [coord[1], coord[0]]);
-                L.polyline(latLngs, { color: 'blue' }).addTo(map);
-                map.fitBounds(L.polyline(latLngs).getBounds());
+                if (data.routes && data.routes.length > 0) {
+                    var routeCoordinates = data.routes[0].geometry.coordinates;
+                    var latLngs = routeCoordinates.map(coord => [coord[1], coord[0]]);
+                    L.polyline(latLngs, { color: 'blue' }).addTo(map);
+                    map.fitBounds(L.polyline(latLngs).getBounds());
+                } else {
+                    console.error('No se pudo calcular la ruta.');
+                    alert('No se pudo calcular la ruta. Verifica las direcciones e intenta nuevamente.');
+                }
+            })
+            .catch(error => {
+                console.error('Error al dibujar la ruta:', error);
+                alert('Hubo un error al calcular la ruta. Intenta nuevamente.');
             });
     }
 });

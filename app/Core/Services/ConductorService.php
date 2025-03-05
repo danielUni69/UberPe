@@ -192,7 +192,7 @@ class ConductorService
             ]);
 
             if ($viaje->metodo === 'Efectivo') {
-                $viaje->estado = 'Viaje pagado sin confirmar por el conductor';
+                $viaje->estado = 'Viaje completado, sin confirmar el pago';
             } else {
                 $persona->increment('billetera', $monto_conductor);
                 $viaje->estado = 'Completado';
@@ -236,7 +236,7 @@ class ConductorService
         }
 
         $viaje = ViajeModel::where('conductor_id', $persona->conductor->id_conductor)
-            ->where('estado', 'Viaje pagado sin confirmar por el conductor')
+            ->where('estado', 'Viaje completado, sin confirmar el pago')
             ->first();
 
         if (! $viaje) {

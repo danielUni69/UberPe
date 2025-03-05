@@ -9,7 +9,8 @@ class PasajeroLive extends Component
 {
     public $estado;
     private $listaPersona;
-    
+    public $tarifa;
+    public $metodo;
     /*#[On('viajeAceptado')]
     public function viajeAceptado($viaje = null)
     {
@@ -23,14 +24,31 @@ class PasajeroLive extends Component
     {
         $this->listaPersona = new ListaPersona;
         $this->estado =  $this->listaPersona->estado_viaje();
-        if (!$this->estado){
-            $this->estado = 'No hay viajes';
-        } 
+        $this->tarifa = 0;
+        $this->metodo = 'No hay metodo de pago';
     }
+
 
     public function estado_viaje(){
         $this->listaPersona = new ListaPersona;
         $this->estado =  $this->listaPersona->estado_viaje();
+        if ($this->estado == 'En curso') {
+            $this->verTarifa();
+            $this->verMetodo();   
+        } else {
+            $this->tarifa = 0;
+            $this->metodo = 'No hay metodo de pago';
+        }
+    }
+
+    public function verTarifa(){
+        $this->listaPersona = new ListaPersona;
+        $this->tarifa = $this->listaPersona->verTarifa();
+        
+    }
+    public function verMetodo(){
+        $this->listaPersona = new ListaPersona;
+        $this->metodo = $this->listaPersona->verMetodo();
     }
 
     public function render()
