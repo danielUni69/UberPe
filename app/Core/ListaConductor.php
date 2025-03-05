@@ -33,4 +33,10 @@ class ListaConductor
     public function verEstado(){
         return $this->service->verEstado();
     }
+    public function viajesPendientes(){
+        return $this->service->viajesPendientes();
+    }
+    public function aceptarViaje($id_viaje){
+        return $this->service->aceptarViaje($id_viaje);
+    }
 }

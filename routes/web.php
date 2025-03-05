@@ -3,6 +3,7 @@
 use App\Core\Persona;
 use App\Http\Controllers\AdministradorController;
 use App\Http\Controllers\ConductorController;
+use App\Http\Controllers\PasajeroController;
 use App\Http\Controllers\PersonaController;
 use App\Http\Controllers\VehiculoController;
 use Illuminate\Support\Facades\Route;
@@ -30,3 +31,6 @@ Route::get('/admin/pasajeros', [AdministradorController::class, 'showPasajeros']
 Route::get('/admin/registro', [AdministradorController::class, 'showRegistroForm'])->name('admin.registro');
 Route::post('/admin/registro', [AdministradorController::class, 'store'])->name('admin.registro');
 Route::post('/logout', [PersonaController::class, 'logout'])->name('logout');
+Route::post('/solicitarServicio', [PasajeroController::class, 'solicitarServicio']);
+Route::post('/cancelarViaje', [PasajeroController::class, 'cancelarViaje']);
+

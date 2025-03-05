@@ -154,10 +154,11 @@ class ConductorService
         }
 
         $viaje->update([
-            'conductor_id' => $user->id,
+            'conductor_id' => $user->conductor->id_conductor,
             'estado' => 'En curso',
         ]);
-
+        $user->conductor->disponible = false;
+        $user->conductor->save(); 
         return $viaje;
     }
 

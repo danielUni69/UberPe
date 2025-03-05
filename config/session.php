@@ -157,7 +157,6 @@ return [
     */
 
     'domain' => env('SESSION_DOMAIN'),
-
     /*
     |--------------------------------------------------------------------------
     | HTTPS Only Cookies
@@ -199,8 +198,8 @@ return [
     |
     */
 
-    'same_site' => env('SESSION_SAME_SITE', 'lax'),
-
+    'same_site' => env('SESSION_SAME_SITE', 'strict'),
+    //'same_site' => env('SESSION_SAME_SITE', 'lax'),
     /*
     |--------------------------------------------------------------------------
     | Partitioned Cookies

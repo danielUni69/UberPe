@@ -6,6 +6,7 @@ use App\Core\ListaPersona;
 use App\Core\Persona;
 use App\Core\Validations\PersonaValidation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class PersonaController extends Controller

@@ -125,6 +125,9 @@ class ListaPersona
         return $this->service->cancelarViaje();
     }
 
+    public function estado_viaje(){
+        return $this->service->estado_viaje();
+    }
     /**
      * Obtiene una persona por su ID.
      *

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('origen');
             $table->string('destino');
             $table->dateTime('fecha');
-            $table->enum('metodo', ['Efectivo', 'Tarjeta']);
+            $table->enum('metodo', ['Efectivo', 'Tarjeta', 'Billetera']);
             $table->enum('estado', ['Pendiente', 'En curso', 'Completado', 'Completado sin pagar', 'Completado sin confirmar', 'Cancelado', 'Cancelado por el pasajero', 'Cancelado por el conductor', 'Viaje pagado sin confirmar por el conductor']);
             $table->decimal('tarifa', 10, 2);
             $table->decimal('saldo_bloqueado', 10, 2)->default(0);

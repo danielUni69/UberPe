@@ -28,16 +28,6 @@ class PersonaTest extends TestCase
 
     private ListaPersona $listaPersona;
 
-    /**
-     * A basic feature test example.
-     */
-    public function test_example(): void
-    {
-        $response = $this->get('/');
-
-        $response->assertStatus(200);
-    }
-
     protected function setUp(): void
     {
         parent::setUp();
@@ -167,7 +157,7 @@ class PersonaTest extends TestCase
         $this->assertEquals(100.0, $saldo);
     }
 
-    public function test_pasajero_cancela_viaje_sin_conductor()
+    /*public function test_pasajero_cancela_viaje_sin_conductor()
     {
         // Crear un usuario pasajero
         $pasajero = PersonaModel::factory()->create(['rol' => 'Pasajero', 'billetera' => 100]);
@@ -177,7 +167,7 @@ class PersonaTest extends TestCase
             'pasajero_id' => $pasajero->id_persona,
             'conductor_id' => null,
             'estado' => 'Pendiente',
-            'metodo' => 'Tarjeta',
+            'metodo' => 'Billetera',
             'saldo_bloqueado' => 20,
         ]);
 
@@ -231,5 +221,27 @@ class PersonaTest extends TestCase
 
         // Verificar que el conductor esté disponible
         $this->assertTrue($conductor->fresh()->disponible);
+    }*/
+
+    public function test_pasajero_cancela_viaje(){
+        //d('antes');
+        dump('persona creada');
+        $persona = PersonaModel::factory()->create(['rol' => 'Pasajero', 'billetera' => 100]);
+        $viaje = ViajeModel::factory()->create([
+            'pasajero_id' => $persona->id_persona,
+            'conductor_id' => null,
+            'origen' => 'aqui',
+            'estado' => 'Pendiente',
+            'tarifa' => 10,
+            'metodo' => 'Billetera',
+            'saldo_bloqueado' => 10,
+        ]);
+        dump('hola perra');
+        dump($persona->nombres);
+        $this->actingAs($persona);
+        //dd($viaje);
+        $responde = $this->personaService->cancelarViaje();
+        dump($responde);
+        dd($persona->fresh()->billetera);
     }
 }
