@@ -165,9 +165,13 @@ class PersonaService
             ->orderBy('created_at', 'desc')->first();
         }
         if ($viaje) {
+            if ($viaje->estado === 'Cancelado por el conductor' || $viaje->estado === 'Cancelado por el pasajero' || $viaje->estado === 'Completado'){
+                return 'No hay viajes'; 
+            }    
             return $viaje->estado;
+        }else {
+            return 'No hay viajes';
         }
-        return null; 
     }
 
     public function cancelarViaje()
@@ -217,9 +221,12 @@ class PersonaService
         } else {
             // Si el pago es en efectivo, solo cancelamos el viaje
             if ($rol === 'Conductor') {
+                $viaje->estado = 'Cancelado por el conductor';
                 $viaje->conductor->update(['disponible' => true]);
+            } else {
+                $viaje->estado = 'Cancelado por el pasajero';
             }
-            $viaje->estado = 'Cancelado por el conductor';
+            
         }
 
         

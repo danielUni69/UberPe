@@ -17,7 +17,7 @@
             @livewire('cambiar-estado')
             @livewire('pasajero-live')
             <div class="input-group mt-3"> 
-                <button class="btn btn-success">Finalizar viaje</button>
+                @livewire('finalizar-viaje')
                 <button class="btn btn-danger">Reportar incidente</button>
                 @livewire('cancelar-viaje')
             </div>

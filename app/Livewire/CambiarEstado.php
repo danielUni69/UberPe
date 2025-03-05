@@ -21,6 +21,7 @@ class CambiarEstado extends Component
 
     #[On('viajeAceptado')]
     #[On('viajeCancelado')]
+    #[On('viajeFinalizado')]
     public function verEstado(){
         $this->listaConductorService = new ListaConductor;
         $this->disponible = $this->listaConductorService->verEstado();

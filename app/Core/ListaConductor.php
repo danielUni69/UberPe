@@ -39,4 +39,10 @@ class ListaConductor
     public function aceptarViaje($id_viaje){
         return $this->service->aceptarViaje($id_viaje);
     }
+    public function finalizarViaje(){
+        return $this->service->finalizarViaje();
+    }
+    public function confirmarPago(){
+        return $this->service->confirmarPago();
+    }
 }

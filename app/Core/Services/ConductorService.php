@@ -196,8 +196,8 @@ class ConductorService
             } else {
                 $persona->increment('billetera', $monto_conductor);
                 $viaje->estado = 'Completado';
-                $pasajero->decrement('billetera', $viaje->tarifa);
                 $persona->conductor->disponible = true;
+                $persona->conductor->save();
             }
 
             $viaje->saldo_bloqueado = 0;
