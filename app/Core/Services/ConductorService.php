@@ -4,11 +4,14 @@ namespace App\Core\Services;
 
 use App\Core\Conductor;
 use App\Core\Persona;
+use App\Core\Pago;
+use App\Core\Reclamo;
 use App\Core\Vehiculo;
 use App\Models\CalificacionConductorModel;
 use App\Models\ConductorModel;
 use App\Models\PagoModel;
 use App\Models\PersonaModel;
+use App\Models\ReclamoModel;
 use App\Models\VehiculoModel;
 use App\Models\ViajeModel;
 use Illuminate\Support\Facades\Auth;
@@ -198,13 +201,12 @@ class ConductorService
                 $viaje->estado = 'Completado';
                 $persona->conductor->disponible = true;
                 $persona->conductor->save();
+                $viaje->saldo_bloqueado = 0;
             }
-
-            $viaje->saldo_bloqueado = 0;
             $viaje->save();
         });
 
-        return ['mensaje' => 'Viaje finalizado correctamente.'];
+        return $viaje;
     }
  
     public function  cambiarEstado()
@@ -292,5 +294,5 @@ class ConductorService
 
         return $viajes;
     }
-
+    
 }

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Core\Reclamo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -32,5 +33,14 @@ class ReclamoModel extends Model
     public function viaje()
     {
         return $this->belongsTo(ViajeModel::class, 'viaje_id', 'id_viaje');
+    }
+    public function toReclamoClass()
+    {
+        return new Reclamo(
+            $this->persona_id,
+            $this->viaje_id,
+            $this->motivo,
+            $this->fecha
+        );
     }
 }

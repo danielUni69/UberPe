@@ -68,6 +68,10 @@
     Livewire.on('viajeCancelado', () => {
         clearMap();
     });
+    Livewire.on('viajeFinalizado', () => {
+        console.log('hola pe')
+        clearMap();
+    });    
 
     function clearMap() {
         map.eachLayer(function (layer) {
