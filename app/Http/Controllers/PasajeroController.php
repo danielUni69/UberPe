@@ -25,7 +25,8 @@ class PasajeroController extends Controller
                 $request->origen,
                 $request->destino,
                 $request->metodo_pago,
-                $request->tarifa
+                $request->tarifa,
+                $request->descripcion,
             );
             return response()->json([
                 'mensaje' => 'Viaje solicitado con éxito.',

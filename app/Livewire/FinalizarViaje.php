@@ -16,11 +16,15 @@ class FinalizarViaje extends Component
     public $viaje_id;
     public $motivo;
 
+    public $showModal = false;
+
     public function finalizarViaje(){
         $this->listaConductor = new ListaConductor;
         $viaje = $this->listaConductor->finalizarViaje();
         if($viaje->metodo === 'Efectivo'){
-            LivewireAlert::title('Confirmar pago')
+            $this->dispatch('holaModal');
+            $this->showModal = true;
+            /*LivewireAlert::title('Confirmar pago')
             ->text('Confirmar pago en efectivo')
             ->question()
             ->asConfirm()
@@ -28,7 +32,7 @@ class FinalizarViaje extends Component
             ->withDenyButton('Reportar que no se pago')
             ->onConfirm('confirmarPago')
             ->onDeny('reportarNopago')
-            ->show();
+            ->show();*/
         } else {
             $this->dispatch('viajeFinalizado');
             LivewireAlert::title('Success') 
@@ -42,7 +46,7 @@ class FinalizarViaje extends Component
         $this->listaConductor = new ListaConductor;
         $this->listaConductor->confirmarPago();
         $this->dispatch('viajeFinalizado');
-        dd('hola soy la funciton confirmar pago');
+        $this->showModal = false;
         LivewireAlert::title('Success')
         ->text('Pago confirmado!.')
         ->success()
@@ -57,6 +61,8 @@ class FinalizarViaje extends Component
         );
         $this->listaPersona->reclamo($reclamo);
         $this->dispatch('viajeFinalizado');
+        $this->showModal = false;
+        LivewireAlert::title('Success')->success()->timer(3000)->show();
     }
 
     public function render()

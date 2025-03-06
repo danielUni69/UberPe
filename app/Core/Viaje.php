@@ -13,8 +13,10 @@ class Viaje
     private $tarifa;
     private $metodo_pago;
     private $saldo_bloqueado;
+    private $descripcion;
 
-    public function __construct($pasajero, $conductor, $origen, $destino, $fecha, $estado, $tarifa, $metodo_pago, $saldo_bloqueado)
+
+    public function __construct($pasajero, $conductor, $origen, $destino, $fecha, $estado, $tarifa, $metodo_pago, $saldo_bloqueado, $descripcion)
     {
         $this->pasajero = $pasajero;
         $this->conductor = $conductor;
@@ -25,6 +27,7 @@ class Viaje
         $this->tarifa = $tarifa;
         $this->metodo_pago = $metodo_pago;
         $this->saldo_bloqueado = $saldo_bloqueado;
+        $this->descripcion = $descripcion;
     }
 
     public function getPasajero() { return $this->pasajero; }
@@ -36,9 +39,11 @@ class Viaje
     public function getTarifa() { return $this->tarifa; }
     public function getMetodoPago() { return $this->metodo_pago; }
     public function getSaldoBloqueado() { return $this->saldo_bloqueado; }
+    public function getDescripcion() { return $this->descripcion; }
 
     public function setEstado($estado) { $this->estado = $estado; }
     public function setTarifa($tarifa) { $this->tarifa = $tarifa; }
     public function setMetodoPago($metodo_pago) { $this->metodo_pago = $metodo_pago; }
     public function setSaldoBloqueado($saldo_bloqueado) { $this->saldo_bloqueado = $saldo_bloqueado; }
+    public function setDescripcion($descripcion) { $this->descripcion = $descripcion; }
 }

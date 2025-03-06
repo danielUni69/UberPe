@@ -4,7 +4,7 @@
 
 @section('content')
     <div class="flex">
-        <div class="map-container w-2/3">
+        <div class="map-container w-2/3 z-0">
             <div id="map" class="map-container"></div>
         </div>
         <div class="solicitudes-container w-1/3 p-4">

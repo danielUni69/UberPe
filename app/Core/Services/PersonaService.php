@@ -171,7 +171,10 @@ class PersonaService
             ->orderBy('created_at', 'desc')->first();
         }
         if ($viaje) {
-            if ($viaje->estado === 'Cancelado por el conductor' || $viaje->estado === 'Cancelado por el pasajero' || $viaje->estado === 'Completado'){
+            if ($viaje->estado === 'Cancelado por el conductor' || $viaje->estado === 'Cancelado por el pasajero' || $viaje->estado === 'Completado' || $viaje->estado === 'Completado sin pagar') {
+                if ($user->rol === 'Pasajero') {
+                    return'Viaje finalizado';
+                }
                 return 'No hay viajes'; 
             }    
             return $viaje->estado;
