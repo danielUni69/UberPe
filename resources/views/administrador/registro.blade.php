@@ -73,14 +73,16 @@
                         @error('password_confirmation') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                     </div>
 
-                    <div class="mb-4">
+                    <div class="mb-4 d-none"> <!-- Ocultar el campo con la clase d-none de Bootstrap -->
                         <label class="block font-medium">Rol</label>
                         <select name="rol" class="w-full p-2 border rounded focus:ring focus:ring-green-300 @error('rol') border-red-500 @enderror">
-                            <option value="Administrador">Administrador</option>
-
+                            <option value="Administrador" selected>Administrador</option> <!-- Siempre seleccionado -->
                         </select>
                         @error('rol') <p class="text-red-500 text-sm">{{ $message }}</p> @enderror
                     </div>
+
+                    <!-- Campo oculto para enviar el valor del rol -->
+                    <input type="hidden" name="rol" value="Administrador">
                 </div>
             </div>
 

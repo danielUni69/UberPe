@@ -13,30 +13,31 @@ class PersonaValidation
             'nombres' => [
                 'required',
                 'max:100',
-                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]*$/', // Solo letras, empieza con mayúscula
+                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?$/', // Dos nombres, cada uno empieza con mayúscula
             ],
             'apellidos' => [
                 'required',
                 'max:100',
-                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]*$/', // Solo letras, empieza con mayúscula
+                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?$/', // Dos apellidos, cada uno empieza con mayúscula
             ],
             'telefono' => 'required|max:15|regex:/^[0-9]+$/', // Solo números
-            'email' => [
-                'required',
-                'email',
-                'unique:persona,email',
-                'max:100',
-                'regex:/^[a-zA-Z0-9._%+-]+@gmail\.com$/', // Solo correos de @gmail.com
-            ],
+           'email' => [
+              'required',
+              'email',
+              'unique:persona,email',
+              'max:100',
+              'regex:/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/', // Permite cualquier dominio válido
+             ],
+
             'usuario' => 'required|unique:persona,usuario|max:50',
             'password' => 'required|max:100',
             'billetera' => 'nullable|numeric|min:0',
             'foto' => 'nullable|image|max:2048', // Validar campo foto
         ], [
-            'nombres.regex' => 'El nombre debe contener solo letras y comenzar con mayúscula.',
-            'apellidos.regex' => 'El apellido debe contener solo letras y comenzar con mayúscula.',
-            'telefono.regex' => 'El teléfono solo puede contener números.',
-            'email.regex' => 'El correo electrónico debe ser de @gmail.com.',
+            'nombres.regex' => 'El nombre debe contener solo letras y comenzar con Mayusculas',
+            'apellidos.regex' => 'El apellido debe contener solo letras y comenzar con Mayusculas',
+            'telefono.regex' => 'Solo permite números.',
+            'email.regex' => 'Deve contener @.',
         ]);
     }
 
@@ -47,12 +48,12 @@ class PersonaValidation
             'nombres' => [
                 'required',
                 'max:100',
-                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]*$/', // Solo letras, empieza con mayúscula
+                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?$/', // Dos nombres, cada uno empieza con mayúscula
             ],
             'apellidos' => [
                 'required',
                 'max:100',
-                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ\s]*$/', // Solo letras, empieza con mayúscula
+                'regex:/^[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+(\s[A-ZÁÉÍÓÚÑ][a-záéíóúñ]+)?$/', // Dos apellidos, cada uno empieza con mayúscula
             ],
             'telefono' => 'required|max:15|regex:/^[0-9]+$/', // Solo números
             'email' => [
@@ -65,20 +66,29 @@ class PersonaValidation
             'usuario' => 'required|unique:persona,usuario,' . $id . ',id_persona|max:50',
             'foto' => 'nullable|image|max:2048', // Validar campo foto
         ], [
-            'nombres.regex' => 'El nombre debe contener solo letras y comenzar con mayúscula.',
-            'apellidos.regex' => 'El apellido debe contener solo letras y comenzar con mayúscula.',
-            'telefono.regex' => 'El teléfono solo puede contener números.',
-            'email.regex' => 'El correo electrónico debe ser de @gmail.com.',
+            'nombres.regex' => 'El nombre debe contener solo letras y comenzar con Mayusculas',
+            'apellidos.regex' => 'El apellido debe contener solo letras y comenzar con Mayusculas',
+            'telefono.regex' => 'Solo permite números.',
+            'email.regex' => 'Deve contener @.',
         ]);
     }
+
 
     public static function validateLogin(array $data)
     {
         return Validator::make($data, [
-            'usuario' => 'required|string|max:50',
+            'usuario' => [
+                'required',
+                'string',
+                'max:50',
+                'exists:persona,usuario', // Verifica que el usuario exista en la tabla 'persona'
+            ],
             'password' => 'required|string|min:3|max:100',
+        ], [
+            'usuario.exists' => 'El usuario no existe en la base de datos.',
         ]);
     }
+
 
     public static function validateRecargarBilletera(array $data)
     {

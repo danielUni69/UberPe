@@ -98,26 +98,22 @@
                                 @enderror
                             </div>
 
-                            <div class="mb-3">
+                            <div class="mb-3 d-none"> <!-- Ocultar el campo con la clase d-none de Bootstrap -->
                                 <label class="form-label">Rol</label>
                                 <select name="rol" class="form-control @error('rol') is-invalid @enderror">
-                                    <option value="Pasajero" {{ $persona->getRol() === 'Pasajero' ? 'selected' : '' }}>Pasajero</option>
-                                    <option value="Administrador" {{ $persona->getRol() === 'Administrador' ? 'selected' : '' }}>Administrador</option>
-                                    <option value="Conductor" {{ $persona->getRol() === 'Conductor' ? 'selected' : '' }}>Conductor</option>
+                                    <option value="Administrador" selected>Administrador</option> <!-- Siempre seleccionado -->
                                 </select>
                                 @error('rol')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
 
-                            <div class="mb-3">
-                                <label class="form-label">Billetera</label>
-                                <input type="number" class="form-control @error('billetera') is-invalid @enderror"
-                                    name="billetera" value="{{ old('billetera', $persona->getBilletera()) }}">
-                                @error('billetera')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                            </div>
+                            <!-- Campo oculto para enviar el valor del rol -->
+                            <input type="hidden" name="rol" value="Administrador">
+
+
+
+
                         </div>
                     </div>
 
@@ -126,7 +122,7 @@
                             <button type="submit" class="btn btn-custom w-100">Guardar Cambios</button>
                         </div>
                         <div class="col-md-6">
-                            <a href="{{ route('home') }}" class="btn btn-secondary w-100">Cancelar</a>
+                            <a href="{{ route('admin.home') }}" class="btn btn-secondary w-100">Cancelar</a>
                         </div>
                     </div>
                 </form>

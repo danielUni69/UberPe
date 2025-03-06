@@ -16,6 +16,7 @@ Route::post('/registro', [PersonaController::class, 'store'])->name('registro');
 Route::get('/conductor/registrar', [ConductorController::class, 'showRegistroForm'])->name('conductor.registro');
 Route::post('/conductor/registrar', [ConductorController::class, 'store'])->name('conductor.registro');
 Route::get('/persona/editar', [PersonaController::class, 'showEditarForm'])->name('persona.editar');
+Route::put('/persona/editar', [PersonaController::class, 'update'])->name('persona.editar');
 Route::post('/persona/editar', [PersonaController::class, 'update'])->name('persona.editar');
 Route::get('/conductor/editar', [ConductorController::class, 'showEditConductorForm'])->name('conductor.editar');
 Route::post('/conductor/editar', [ConductorController::class, 'update'])->name('conductor.editar');
@@ -23,7 +24,7 @@ Route::get('/cambiar-contrasena', [PersonaController::class, 'showCambiarPass'])
 Route::post('/cambiar-contrasena', [PersonaController::class, 'cambiarPass'])->name('cambiar-contrasena');
 Route::get('/vehiculo', [VehiculoController::class, 'index'])->name('vehiculo.index');
 Route::get('/admin/home', [AdministradorController::class, 'index'])->name('admin.home');
-Route::post('/admin/editar', [AdministradorController::class, 'update'])->name('admin.editar');
+Route::put('/admin/editar', [PersonaController::class, 'update'])->name('admin.editar');
 Route::get('/admin/editar', [PersonaController::class, 'showEditarForm'])->name('admin.editar');
 Route::get('/admin/conductores', [PersonaController::class, 'showConductores'])->name('admin.conductores');
 Route::get('/admin/pasajeros', [AdministradorController::class, 'showPasajeros'])->name('admin.pasajeros');

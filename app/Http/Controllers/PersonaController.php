@@ -28,7 +28,7 @@ class PersonaController extends Controller
      * @return \Illuminate\Http\RedirectResponse
      */
     public function store(Request $request)
-{
+    {
     // Validar los datos con PersonaValidation
     $validator = PersonaValidation::validateAdd($request->all());
     if ($validator->fails()) {
@@ -63,69 +63,80 @@ class PersonaController extends Controller
     // Iniciar sesión con el nuevo usuario
     $this->listaPersona->iniciarSesion($request->input('usuario'), $request->input('password'));
 
-    return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
-}
+    // Redirigir según el rol
+    if ($persona->getRol() === 'Pasajero') {
+        return redirect()->route('home')->with('success', 'Usuario creado exitosamente.');
+    } else {
+        return redirect()->route('admin.home')->with('success', 'Usuario creado exitosamente.');
+    }
+    }
     public function update(Request $request, $id = null)
     {
-        if ($id == null) {
-            $id = auth()->user()->id_persona;
+    if ($id == null) {
+        $id = auth()->user()->id_persona;
+    }
+
+    // Validar los datos de entrada
+    $validator = PersonaValidation::validateEdit($request->all(), $id);
+    if ($validator->fails()) {
+        return redirect()->back()->withErrors($validator)->withInput();
+    }
+
+    // Obtener la persona actual
+    $personaActual = $this->listaPersona->getPersona($id);
+
+    // Manejar la carga de la foto (opcional)
+    /*$fotoPath = $personaActual->foto;
+    if ($request->hasFile('foto')) {
+        if ($fotoPath) {
+            Storage::disk('public')->delete($fotoPath);
         }
+        $fotoPath = $request->file('foto')->store('fotos', 'public');
+    }*/
 
-        // Validar los datos de entrada
-        $validator = PersonaValidation::validateEdit($request->all(), $id);
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
+    // Crear una nueva instancia de Persona con los datos actualizados
+    $persona = new Persona(
+        $request->input('ci'),
+        $request->input('nombres'),
+        $request->input('apellidos'),
+        $request->input('telefono'),
+        $request->input('email'),
+        $request->input('usuario'),
+        $request->input('rol', 'Pasajero'), // Rol (si no se proporciona, se asigna 'Pasajero' por defecto)
+        $request->input('billetera', 0.00), // Billetera (valor predeterminado 0.00)
+        null, // Contraseña (no se actualiza en la edición)
+        null // Foto (opcional)
+    );
 
-        // Obtener la persona actual
-        $personaActual = $this->listaPersona->getPersona($id);
+    // Actualizar la persona en la base de datos
+    $this->listaPersona->edit($persona, $id);
 
-        // Manejar la carga de la foto
-
-        /*$fotoPath = $personaActual->foto;
-        if ($request->hasFile('foto')) {
-            // Eliminar la foto anterior si existe
-            if ($fotoPath) {
-                Storage::disk('public')->delete($fotoPath);
-            }
-            // Guardar la nueva foto
-            $fotoPath = $request->file('foto')->store('fotos', 'public');
-        }*/
-
-        $persona = new Persona(
-            $request->input('ci'),
-            $request->input('nombres'),
-            $request->input('apellidos'),
-            $request->input('telefono'),
-            $request->input('email'),
-            $request->input('usuario'),
-            $request->input('rol', 'Pasajero'),
-            $request->input('billetera',0.00),
-            null,
-            //$fotoPath // Añadir ruta de la foto
-        );
-
-        $response = $this->listaPersona->edit($persona, $id);
-
+    // Redirigir según el rol
+    if ($persona->getRol() === 'Pasajero') {
         return redirect()->route('home')->with('success', 'Usuario editado exitosamente.');
+    } else {
+        return redirect()->route('admin.home')->with('success', 'Usuario editado exitosamente.');
+    }
     }
 
     public function showEditarForm($id = null)
-    {
+   {
+    if ($id == null) {
+        $id = auth()->user()->id_persona;
+    }
 
-        if ($id == null) {
-            $persona = $this->listaPersona->getPersona(auth()->user()->id_persona);
-        } else {
-            $persona = $this->listaPersona->getPersona($id);
-        }
-        if (! $persona) {
-            return redirect()->route('home')->with('error', 'Pasajero no encontrado.');
-        }
+    // Obtener la persona actual
+    $persona = $this->listaPersona->getPersona($id);
+    if (!$persona) {
+        return redirect()->route('home')->with('error', 'Usuario no encontrado.');
+    }
 
-        // Mostrar el formulario de edición con los datos del pasajero
+    // Determinar la vista según el rol
+    if ($persona->getRol() === 'Pasajero') {
         return view('persona.editar', compact('persona'));
+    } else {
         return view('administrador.editar', compact('persona'));
-
+    }
     }
 
     /**
@@ -160,6 +171,7 @@ class PersonaController extends Controller
 
         return back()->withErrors(['error' => 'Credenciales incorrectas.']);
     }
+
 
     public function cancelarViaje()
     {

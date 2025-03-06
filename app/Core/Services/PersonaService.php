@@ -97,7 +97,11 @@ class PersonaService
         Auth::logout();
         session()->forget('rol');
 
-        return true; 
+        return true;
+    }
+    public function getPersonaByUsuario($usuario)
+    {
+    return PersonaModel::where('usuario', $usuario)->first();
     }
 
     public function cambiarPass($currentPassword, $newPassword)
