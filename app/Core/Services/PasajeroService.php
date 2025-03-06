@@ -13,6 +13,7 @@ class PasajeroService
 {
     public function solicitarServicio($origen, $destino, $metodo_pago, $tarifa)
     {
+        try {
         $user = Auth::user();
 
         // Verificar que el usuario sea una instancia de PersonaModel
@@ -53,7 +54,10 @@ class PasajeroService
             'saldo_bloqueado' => $tarifa,
         ]);
 
-        return $viaje; // Devuelve el viaje creado
+        return $viaje; 
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'cagaste. ' . $e->getMessage(). $user->nombres], 500);
+        }
     }
 
     public function pagar()

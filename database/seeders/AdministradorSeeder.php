@@ -19,7 +19,7 @@ class AdministradorSeeder extends Seeder
             'apellidos' => 'Pérez',
             'telefono' => '123456789',
             'email' => 'juan.admin@example.com',
-            'usuario' => 'juan',
+            'usuario' => 'juancito',
             'password' => Hash::make('admin123'),
             'billetera' => 1000,
             'deuda' => 0,

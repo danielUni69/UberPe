@@ -154,10 +154,11 @@ class ConductorService
         }
 
         $viaje->update([
-            'conductor_id' => $user->id,
+            'conductor_id' => $user->conductor->id_conductor,
             'estado' => 'En curso',
         ]);
-
+        $user->conductor->disponible = false;
+        $user->conductor->save(); 
         return $viaje;
     }
 
@@ -191,12 +192,12 @@ class ConductorService
             ]);
 
             if ($viaje->metodo === 'Efectivo') {
-                $viaje->estado = 'Viaje pagado sin confirmar por el conductor';
+                $viaje->estado = 'Viaje completado, sin confirmar el pago';
             } else {
                 $persona->increment('billetera', $monto_conductor);
                 $viaje->estado = 'Completado';
-                $pasajero->decrement('billetera', $viaje->tarifa);
                 $persona->conductor->disponible = true;
+                $persona->conductor->save();
             }
 
             $viaje->saldo_bloqueado = 0;
@@ -235,7 +236,7 @@ class ConductorService
         }
 
         $viaje = ViajeModel::where('conductor_id', $persona->conductor->id_conductor)
-            ->where('estado', 'Viaje pagado sin confirmar por el conductor')
+            ->where('estado', 'Viaje completado, sin confirmar el pago')
             ->first();
 
         if (! $viaje) {

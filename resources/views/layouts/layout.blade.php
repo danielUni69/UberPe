@@ -7,10 +7,10 @@
     <title>@yield('title')</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css" rel="stylesheet">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <style>
-        #map { width: 100%; height: 500px; }
-    </style>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
      <style>
@@ -59,22 +59,18 @@
         }
 
         .map-container {
-            flex-grow: 1;
-            /* Ocupa el espacio restante */
-            height: calc(100vh - 230px);
-            /* Ajusta la altura del mapa */
-        }
+    flex-grow: 1;
+    /* Ocupa el espacio restante */
+    height: calc(100vh - 230px);
+    /* Ajusta la altura del mapa */
+}
 
+        
         .bottom-bar {
             padding: 20px;
             background-color: #fff;
             border-top: 1px solid #ddd;
             box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .car-image {
-            width: 50px;
-            height: 50px;
         }
 
         .btn-success {
@@ -191,8 +187,14 @@
             });
         });
     </script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @stack('scripts')
     @livewireScripts
-
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
 </body>
 
 </html>

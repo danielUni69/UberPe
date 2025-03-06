@@ -6,6 +6,8 @@ use App\Core\Persona;
 use App\Models\PersonaModel;
 use App\Models\Viaje;
 use App\Models\ViajeModel;
+use Illuminate\Support\Facades\Log;
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
@@ -156,32 +158,46 @@ class PersonaService
         return $persona->convertToPersona();
     }
 
-    public function cancelarViaje()
-    {
+    public function estado_viaje(){
         $user = Auth::user();
-        $rol = session('rol') ?? $user->rol;
-
-        // Verificar permisos
-        if (! in_array($rol, ['Pasajero', 'Conductor'])) {
-            throw new \Exception('No tienes permisos para cancelar viajes.', 403);
-        }
-
-        // Buscar el viaje activo
-        $viaje = ViajeModel::where(function ($query) use ($user, $rol) {
-            if ($rol === 'Pasajero') {
-                $query->where('pasajero_id', $user->id_persona);
-            } elseif ($rol === 'Conductor') {
-                $query->where('conductor_id', $user->id_persona);
-            }
-        })
-            ->whereIn('estado', ['En curso', 'Pendiente'])
+        if($user->rol == "Pasajero"){
+            $viaje = ViajeModel::where('pasajero_id', $user->id_persona)
+            ->orderBy('created_at', 'desc')
             ->first();
-
-        if (! $viaje) {
-            throw new \Exception('No tienes viajes activos para cancelar.', 400);
+        }else {
+            $viaje = ViajeModel::where('conductor_id', $user->conductor->id_conductor)
+            ->orderBy('created_at', 'desc')->first();
         }
+        if ($viaje) {
+            if ($viaje->estado === 'Cancelado por el conductor' || $viaje->estado === 'Cancelado por el pasajero' || $viaje->estado === 'Completado'){
+                return 'No hay viajes'; 
+            }    
+            return $viaje->estado;
+        }else {
+            return 'No hay viajes';
+        }
+    }
 
-        // Lógica de cancelación
+    public function cancelarViaje()
+{
+    try {
+        $user = Auth::user();
+        $rol = $user->rol;
+
+        $query = ViajeModel::query();
+    
+    if ($rol === 'Pasajero') {
+        $query->where('pasajero_id', $user->id_persona);
+    } elseif ($rol === 'Conductor') {
+        $query->where('conductor_id', $user->conductor->id_conductor);
+    }
+    
+    $viaje = $query->whereIn('estado', ['En curso', 'Pendiente'])
+        ->first();
+
+    if (! $viaje) {
+        throw new \Exception('No tienes viajes activos para cancelar.', 400);
+    }
         if (in_array($viaje->metodo, ['Billetera', 'Tarjeta'])) {
             if ($rol === 'Pasajero') {
                 if ($viaje->conductor) {
@@ -196,7 +212,6 @@ class PersonaService
                     $user->billetera += $montoDevuelto;
                     $user->save();
 
-                    // Marcar al conductor como disponible
                     $viaje->conductor->update(['disponible' => true]);
                 }
                 $viaje->estado = 'Cancelado por el pasajero';
@@ -210,15 +225,58 @@ class PersonaService
         } else {
             // Si el pago es en efectivo, solo cancelamos el viaje
             if ($rol === 'Conductor') {
+                $viaje->estado = 'Cancelado por el conductor';
                 $viaje->conductor->update(['disponible' => true]);
+            } else {
+                $viaje->estado = 'Cancelado por el pasajero';
             }
-            $viaje->estado = 'Cancelado por el pasajero';
+            
         }
 
-        // Resetear saldo bloqueado y guardar cambios
+        
         $viaje->saldo_bloqueado = 0;
         $viaje->save();
 
-        return $viaje; // Devuelve el viaje actualizado
+        return $viaje; 
+    } catch (\Exception $e) {
+        return response()->json(['error' => 'cagaste. ' . $e->getMessage(). $user->nombres], 500);
     }
+}
+
+    public function verTarifa(){
+        $user = Auth::user();
+        if($user->rol == "Pasajero"){
+            $viaje = ViajeModel::where('pasajero_id', $user->id_persona)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        } else {
+            $viaje = ViajeModel::where('conductor_id', $user->conductor->id_conductor)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        }
+        
+        if ($viaje) {
+            return $viaje->tarifa;
+        }else {
+            return 'No hay viajes';
+        }
+    }
+    public function verMetodo(){
+        $user = Auth::user();
+        if($user->rol == "Pasajero"){
+            $viaje = ViajeModel::where('pasajero_id', $user->id_persona)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        } else {
+            $viaje = ViajeModel::where('conductor_id', $user->conductor->id_conductor)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        }
+        if ($viaje) {
+            return $viaje->metodo;
+        }else {
+            return 'No hay viajes';
+        }
+    }
+
 }
