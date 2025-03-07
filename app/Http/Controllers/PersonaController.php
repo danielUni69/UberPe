@@ -201,24 +201,39 @@ class PersonaController extends Controller
     }
 
     public function cambiarPass(Request $request)
-    {
-        $currentPassword = $request->input('currentPassword');
-        $newPassword = $request->input('new_password');
-        $confirmPassword = $request->input('confirm_password');
+{
+    $currentPassword = $request->input('currentPassword');
+    $newPassword = $request->input('new_password');
+    $confirmPassword = $request->input('confirm_password');
 
-        // Verificar que la nueva contraseña y la confirmación sean iguales
-        if ($newPassword !== $confirmPassword) {
-            return back()->withErrors(['error' => 'La nueva contraseña y la confirmación no coinciden.']);
-        }
-
-        $response = $this->listaPersona->cambiarPass($currentPassword, $newPassword);
-
-        if ($response['success']) {
-            return redirect()->route('home')->with('success', $response['message']);
-        }
-
-        return back()->withErrors(['error' => $response['message']]);
+    // Verificar que la nueva contraseña y la confirmación sean iguales
+    if ($newPassword !== $confirmPassword) {
+        return back()->withErrors(['error' => 'La nueva contraseña y la confirmación no coinciden.']);
     }
+
+    // Cambiar la contraseña
+    $response = $this->listaPersona->cambiarPass($currentPassword, $newPassword);
+
+    // Verificar si el cambio de contraseña fue exitoso
+    if ($response['success']) {
+        // Obtener el rol del usuario actual
+        $rol = auth()->user()->rol; // Asume que el rol está almacenado en el campo "rol" del usuario autenticado
+
+        // Redirigir según el rol
+        switch ($rol) {
+            case 'Administrador':
+                return redirect()->route('admin.home')->with('success', $response['message']);
+            case 'Conductor':
+                return redirect()->route('home-conductor')->with('success', $response['message']);
+            case 'Pasajero':
+            default:
+                return redirect()->route('home')->with('success', $response['message']);
+        }
+    }
+
+    // Si el cambio de contraseña falló, regresar con un mensaje de error
+    return back()->withErrors(['error' => $response['message']]);
+}
 
     public function recargarBilletera(Request $request, $id)
     {

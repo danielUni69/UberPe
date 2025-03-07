@@ -93,7 +93,7 @@ class PersonaValidation
     public static function validateRecargarBilletera(array $data)
     {
         return Validator::make($data, [
-            'monto' => 'required|numeric|min:0',
+            'monto' => 'required|numeric|min:100',
         ]);
     }
 }

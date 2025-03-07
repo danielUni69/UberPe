@@ -28,6 +28,8 @@ class ConductorModel extends Model
     public function vehiculos()
     {
         return $this->hasMany(VehiculoModel::class, 'conductor_id', 'id_conductor');
+
+
     }
 
     // Relación con ViajeModel

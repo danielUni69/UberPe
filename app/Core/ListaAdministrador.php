@@ -25,10 +25,14 @@ class ListaAdministrador
      *
      * @return \Illuminate\Database\Eloquent\Collection
      */
-    public function list()
+    public function listarConductores()
+    {
+        return $this->service->getConductores();
+    }
+
+    public function listarPasajeros()
     {
         return $this->service->getPasajeros();
-
     }
 
     /**

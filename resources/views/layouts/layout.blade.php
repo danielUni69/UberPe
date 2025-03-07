@@ -9,7 +9,7 @@
     <link href="https://cdn.materialdesignicons.com/6.5.95/css/materialdesignicons.min.css" rel="stylesheet">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -65,7 +65,7 @@
     /* Ajusta la altura del mapa */
 }
 
-        
+
         .bottom-bar {
             padding: 20px;
             background-color: #fff;
@@ -194,7 +194,7 @@
     @stack('scripts')
     @livewireScripts
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    
+
 </body>
 
 </html>
