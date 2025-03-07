@@ -64,7 +64,6 @@
     }
     .card-body strong {
         margin-right: 4px;
-
     }
 </style>
 <div class="container text-center">
@@ -74,11 +73,11 @@
         <div class="card">
             <div class="header">
                 <div class="avatar">
-                    <img src="{{ asset('images/conductores/' . $conductor->foto) }}" alt="Avatar">
+                    <img src="{{ asset('images/conductores/' . $conductor->persona->foto) }}" alt="Avatar">
                 </div>
                 <div class="text-start">
-                    <p><strong>Nombre:</strong> {{ $conductor->nombres }}</p>
-                    <p><strong>Apellido:</strong> {{ $conductor->apellidos }}</p>
+                    <p><strong>Nombre:</strong> {{ $conductor->persona->nombres }}</p>
+                    <p><strong>Apellido:</strong> {{ $conductor->persona->apellidos }}</p>
                 </div>
             </div>
             <img src="https://via.placeholder.com/300x150" class="card-img-top" alt="Carro">
@@ -89,16 +88,21 @@
                 <p><strong>Licencia:</strong> {{ $conductor->licencia }}</p>
                 <p><strong>Disponible:</strong> {{ $conductor->disponible ? 'Sí' : 'No' }}</p>
                 <p><strong>Vehículo:</strong></p>
-               <!--
-<ul>
-    <li><strong>Marca:</strong> // $conductor->vehiculo->marca }}</li>
-    <li><strong>Modelo:</strong> //$conductor->vehiculo->modelo }}</li>
-    <li><strong>Placa:</strong> // $conductor->vehiculo->placa }}</li>
-    <li><strong>Color:</strong>  //$conductor->vehiculo->color }}</li>
-</ul>
--->
-                <button class="btn btn-light">Habilitar</button>
-                <button class="btn btn-custom">Inhabilitar</button>
+                @if($conductor->vehiculos->isNotEmpty())
+    @foreach($conductor->vehiculos as $vehiculo)
+        <ul>
+            <p><strong>Marca:</strong> {{ $vehiculo->marca }}</p>
+            <p><strong>Modelo:</strong> {{ $vehiculo->modelo }}</p>
+            <p><strong>Placa:</strong> {{ $vehiculo->placa }}</p>
+            <p><strong>Color:</strong> {{ $vehiculo->color }}</p>
+        </ul>
+    @endforeach
+@else
+    <p>No hay vehículo registrado para este conductor.</p>
+@endif
+
+              <!--  <button class="btn btn-light">Habilitar</button>
+                <button class="btn btn-custom">Inhabilitar</button>-->
             </div>
         </div>
         @endforeach

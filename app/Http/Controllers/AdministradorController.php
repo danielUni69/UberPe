@@ -26,14 +26,13 @@ class AdministradorController extends Controller
     public function listarConductores()
     {
         // Obtener todos los conductores con sus vehículos desde el servicio
-        $conductores = $this->listaAdministrador->listarConductores();
-        $vehiculos = $this->listaAdministrador->listarConductores();
-        return view('administrador.conductores', compact('conductores'));
+         // Obtener todos los conductores con sus vehículos desde el servicio
+         $conductores = $this->listaAdministrador->listarConductores();
+         return view('administrador.conductores', compact('conductores'));
     }
 
     public function listarPasajeros()
     {
-        // Obtener todos los pasajeros desde el servicio
         $pasajeros = $this->listaAdministrador->listarPasajeros();
         return view('administrador.pasajeros', compact('pasajeros'));
     }

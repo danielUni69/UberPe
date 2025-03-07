@@ -37,7 +37,7 @@ class AdministradorService
 
     public function getPasajeros()
     {
-        return $pasajeros = PersonaModel::all();
+        return PersonaModel::where('rol', 'Pasajero')->get();
     }
 
 
