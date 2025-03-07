@@ -13,7 +13,7 @@ class ListaPasajero
         $this->servicePasajero = new PasajeroService;
     }
 
-    public function solicitarServicio($origen, $destino, $metodo_pago, $tarifa){
-        return $this->servicePasajero->solicitarServicio($origen, $destino, $metodo_pago, $tarifa);
+    public function solicitarServicio($origen, $destino, $metodo_pago, $tarifa, $descripcion){
+        return $this->servicePasajero->solicitarServicio($origen, $destino, $metodo_pago, $tarifa, $descripcion);
     }
 }

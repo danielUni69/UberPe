@@ -109,6 +109,7 @@
             padding: 8px 10px;
             margin-top: 5px;
         }
+        
     </style>
     @livewireStyles
 </head>

@@ -4,6 +4,7 @@ namespace App\Core\Services;
 
 use App\Core\Persona;
 use App\Core\Reclamo;
+use App\Core\Viaje as CoreViaje;
 use App\Models\PersonaModel;
 use App\Models\ReclamoModel;
 use App\Models\Viaje;
@@ -248,7 +249,7 @@ class PersonaService
     }
 }
 
-    public function verTarifa(){
+    public function obtenerUltimoViaje(){
         $user = Auth::user();
         if($user->rol == "Pasajero"){
             $viaje = ViajeModel::where('pasajero_id', $user->id_persona)
@@ -259,7 +260,13 @@ class PersonaService
             ->orderBy('created_at', 'desc')
             ->first();
         }
-        
+        if (!$viaje){
+            return null;
+        }
+        return $viaje;
+    }
+    public function verTarifa(){
+        $viaje = $this->obtenerUltimoViaje();
         if ($viaje) {
             return $viaje->tarifa;
         }else {
@@ -267,16 +274,7 @@ class PersonaService
         }
     }
     public function verMetodo(){
-        $user = Auth::user();
-        if($user->rol == "Pasajero"){
-            $viaje = ViajeModel::where('pasajero_id', $user->id_persona)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        } else {
-            $viaje = ViajeModel::where('conductor_id', $user->conductor->id_conductor)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        }
+        $viaje = $this->obtenerUltimoViaje();
         if ($viaje) {
             return $viaje->metodo;
         }else {
@@ -284,32 +282,31 @@ class PersonaService
         }
     }
 
-    public function reclamo(Reclamo $reclamo){
+    public function AddReclamo(Reclamo $reclamo){
         $persona = Auth::user();
-        if ($persona->rol === 'Conductor')
-            $viaje = ViajeModel::where('conductor_id', $persona->conductor->id_conductor)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        else
-            $viaje = ViajeModel::where('pasajero_id', $persona->id_persona)
-            ->orderBy('created_at', 'desc')
-            ->first();
-        if (!$viaje) {
-            dd('error pe');
-            return 0;
-        } else {
-            $newReclamo = new ReclamoModel;
-            $newReclamo->persona_id = $persona->id_persona;
-            $newReclamo->viaje_id = $viaje->id_viaje;
-            $newReclamo->motivo = $reclamo->getMotivo();
-            $newReclamo->fecha = $reclamo->getFecha();
-            $newReclamo->save();
-            $viaje->estado = 'Completado sin pagar';
-            $viaje->save();
-        } if($persona->rol === 'Conductor'){
+        $viaje = $this->obtenerUltimoViaje();
+    
+        $newReclamo = new ReclamoModel;
+        $newReclamo->persona_id = $persona->id_persona;
+        $newReclamo->viaje_id = $viaje->id_viaje;
+        $newReclamo->motivo = $reclamo->getMotivo();
+        $newReclamo->fecha = $reclamo->getFecha();
+        $newReclamo->save();
+        
+        return $newReclamo;
+    }
+    public function reclamoNopago(Reclamo $reclamo){
+        $persona = Auth::user();
+        $newReclamo = $this->AddReclamo($reclamo);
+        $viaje = $this->obtenerUltimoViaje();
+        $viaje->estado = 'Completado sin pagar';
+        $viaje->save();
+        if ($persona->rol === 'Conductor'){
             $persona->conductor->disponible = true;
             $persona->conductor->save();
         }
+        $viaje->persona->deuda = $viaje->tarifa;
+        $viaje->persona->save();
         return $newReclamo;
     }
 

@@ -41,7 +41,7 @@ class PasajeroService
             $user->save();
         }
 
-        // Crear el viaje
+        
         $viaje = ViajeModel::create([
             'pasajero_id' => $user->id_persona,
             'conductor_id' => null, // Aún no se asigna un conductor
@@ -52,7 +52,7 @@ class PasajeroService
             'tarifa' => $tarifa,
             'metodo' => $metodo_pago,
             'saldo_bloqueado' => $tarifa,
-            'descripcion' => $descripcion,
+            'descripcion' => $descripcion
         ]);
 
         return $viaje; 

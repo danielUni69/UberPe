@@ -59,7 +59,7 @@ class FinalizarViaje extends Component
             'El pasajero no pago en viaje',
             now()
         );
-        $this->listaPersona->reclamo($reclamo);
+        $this->listaPersona->reclamoNoPago($reclamo);
         $this->dispatch('viajeFinalizado');
         $this->showModal = false;
         LivewireAlert::title('Success')->success()->timer(3000)->show();

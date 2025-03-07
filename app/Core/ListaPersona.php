@@ -147,7 +147,7 @@ class ListaPersona
     public function verMetodo(){
         return $this->service->verMetodo();
     }
-    public function reclamo(Reclamo $reclamo){
-        return $this->service->reclamo($reclamo);
+    public function reclamoNoPago(Reclamo $reclamo){
+        return $this->service->reclamoNopago($reclamo);
     }
 }

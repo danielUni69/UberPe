@@ -9,6 +9,7 @@
                 <p class="truncate"><strong>Destino:</strong> {{ $solicitud->destino }}</p>
                 <p class="truncate"><strong>Tarifa:</strong> {{ $solicitud->tarifa }} Bs</p>
                 <p class="truncate"><strong>Metodo:</strong> {{ $solicitud->metodo }}</p>
+                <p class="truncate"><strong>Metodo:</strong> {{ $solicitud->descripcion }}</p>
                 <!-- Botón para aceptar el viaje -->
                 <button wire:click="aceptarViaje({{ $solicitud->id_viaje }})" class="mt-2 w-full bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors">
                     Aceptar Viaje
