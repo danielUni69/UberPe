@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Auth;
 
 class PasajeroService
 {
-    public function solicitarServicio($origen, $destino, $metodo_pago, $tarifa)
+    public function solicitarServicio($origen, $destino, $metodo_pago, $tarifa, $descripcion)
     {
         try {
         $user = Auth::user();
@@ -52,6 +52,7 @@ class PasajeroService
             'tarifa' => $tarifa,
             'metodo' => $metodo_pago,
             'saldo_bloqueado' => $tarifa,
+            'descripcion' => $descripcion,
         ]);
 
         return $viaje; 

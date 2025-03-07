@@ -28,11 +28,12 @@ Route::get('/admin/home', [AdministradorController::class, 'index'])->name('admi
 Route::put('/admin/editar', [PersonaController::class, 'update'])->name('admin.editar');
 Route::get('/admin/editar', [PersonaController::class, 'showEditarForm'])->name('admin.editar');
 //Route::get('/admin/conductores', [AdministradorController::class, 'listarConductores'])->name('admin.conductores');
-Route::get('/admin/pasajeros', [AdministradorController::class, 'showPasajeros'])->name('admin.pasajeros');
+//Route::get('/admin/pasajeros', [AdministradorController::class, 'showPasajeros'])->name('admin.pasajeros');
 Route::get('/admin/registro', [AdministradorController::class, 'showRegistroForm'])->name('admin.registro');
 Route::post('/admin/registro', [AdministradorController::class, 'store'])->name('admin.registro');
 Route::post('/logout', [PersonaController::class, 'logout'])->name('logout');
 Route::post('/solicitarServicio', [PasajeroController::class, 'solicitarServicio']);
 Route::get('/admin/conductores', [AdministradorController::class, 'listarConductores'])->name('admin.conductores');
+Route::get('/admin/pasajeros', [AdministradorController::class, 'listarPasajeros'])->name('admin.pasajeros');
 Route::post('/cancelarViaje', [PasajeroController::class, 'cancelarViaje']);
 

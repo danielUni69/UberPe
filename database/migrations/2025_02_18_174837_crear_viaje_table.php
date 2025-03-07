@@ -19,6 +19,7 @@ return new class extends Migration
             $table->enum('estado', ['Pendiente', 'En curso', 'Completado', 'Completado sin pagar', 'Completado sin confirmar', 'Cancelado', 'Cancelado por el pasajero', 'Cancelado por el conductor', 'Viaje pagado sin confirmar por el conductor', 'Viaje completado, sin confirmar el pago']);
             $table->decimal('tarifa', 10, 2);
             $table->decimal('saldo_bloqueado', 10, 2)->default(0);
+            $table->text('descripcion')->nullable();
             $table->timestamps();
             // Relaciones
             $table->foreign('pasajero_id')->references('id_persona')->on('persona')->onDelete('cascade');

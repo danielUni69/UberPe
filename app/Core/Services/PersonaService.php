@@ -3,7 +3,9 @@
 namespace App\Core\Services;
 
 use App\Core\Persona;
+use App\Core\Reclamo;
 use App\Models\PersonaModel;
+use App\Models\ReclamoModel;
 use App\Models\Viaje;
 use App\Models\ViajeModel;
 use Illuminate\Support\Facades\Log;
@@ -169,7 +171,10 @@ class PersonaService
             ->orderBy('created_at', 'desc')->first();
         }
         if ($viaje) {
-            if ($viaje->estado === 'Cancelado por el conductor' || $viaje->estado === 'Cancelado por el pasajero' || $viaje->estado === 'Completado'){
+            if ($viaje->estado === 'Cancelado por el conductor' || $viaje->estado === 'Cancelado por el pasajero' || $viaje->estado === 'Completado' || $viaje->estado === 'Completado sin pagar') {
+                if ($user->rol === 'Pasajero') {
+                    return'Viaje finalizado';
+                }
                 return 'No hay viajes'; 
             }    
             return $viaje->estado;
@@ -277,6 +282,35 @@ class PersonaService
         }else {
             return 'No hay viajes';
         }
+    }
+
+    public function reclamo(Reclamo $reclamo){
+        $persona = Auth::user();
+        if ($persona->rol === 'Conductor')
+            $viaje = ViajeModel::where('conductor_id', $persona->conductor->id_conductor)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        else
+            $viaje = ViajeModel::where('pasajero_id', $persona->id_persona)
+            ->orderBy('created_at', 'desc')
+            ->first();
+        if (!$viaje) {
+            dd('error pe');
+            return 0;
+        } else {
+            $newReclamo = new ReclamoModel;
+            $newReclamo->persona_id = $persona->id_persona;
+            $newReclamo->viaje_id = $viaje->id_viaje;
+            $newReclamo->motivo = $reclamo->getMotivo();
+            $newReclamo->fecha = $reclamo->getFecha();
+            $newReclamo->save();
+            $viaje->estado = 'Completado sin pagar';
+            $viaje->save();
+        } if($persona->rol === 'Conductor'){
+            $persona->conductor->disponible = true;
+            $persona->conductor->save();
+        }
+        return $newReclamo;
     }
 
 }

@@ -29,7 +29,6 @@ class ConductorModel extends Model
     {
         return $this->hasMany(VehiculoModel::class, 'conductor_id', 'id_conductor');
 
-
     }
 
     // Relación con ViajeModel

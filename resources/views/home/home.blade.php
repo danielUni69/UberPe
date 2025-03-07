@@ -19,10 +19,13 @@
             <label class="form-check-label" for="efectivo">Efectivo</label>
         </div>
     </div>
-    <div class="input-group mt-3">
-        <input type="text" class="form-control" id="tarifa" name="tarifa" placeholder="Ofrezca su tarifa">
-        <span class="input-group-text">Bs</span>
+    <div>
+        <div class="input-group mt-3">
+            <input type="text" class="form-control" id="tarifa" name="tarifa" placeholder="Ofrezca su tarifa">
+            <span class="input-group-text">Bs</span>
+        </div>
     </div>
+    
     <div class="input-group mt-3">
         <input type="text" id="origen" name="origen" class="form-control" placeholder="Origen">
         <button class="btn btn-warning" id="clearOrigen">Eliminar Origen</button>
@@ -32,7 +35,7 @@
         <button class="btn btn-danger" id="cancelarViaje">Cancelar Viaje</button>
         <button class="btn btn-primary" id="locateMe">Localizarme</button>
     </div>
-    
+
 </div>
 
 <script>

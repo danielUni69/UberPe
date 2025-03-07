@@ -44,18 +44,18 @@ class PersonaController extends Controller
         $fotoPath = $request->file('foto')->store('fotos', 'public');
     }*/
 
-    // Crear una nueva instancia de Persona
+
     $persona = new Persona(
-        $request->input('ci'), // CI
-        $request->input('nombres'), // Nombres
-        $request->input('apellidos'), // Apellidos
-        $request->input('telefono'), // Teléfono
-        $request->input('email'), // Email
-        $request->input('usuario'), // Usuario
-        $request->input('rol', 'Pasajero'), // Rol (si no se proporciona, se asigna 'Pasajero' por defecto)
-        $request->input('billetera', 0.00), // Billetera (valor predeterminado 0.00)
-        $request->input('password'), // Contraseña
-        null // Foto (opcional)
+        $request->input('ci'), 
+        $request->input('nombres'), 
+        $request->input('apellidos'), 
+        $request->input('telefono'), 
+        $request->input('email'), 
+        $request->input('usuario'), 
+        $request->input('rol', 'Pasajero'), 
+        $request->input('billetera', 0.00), 
+        $request->input('password'), 
+        null 
     );
 
     // Guardar la persona en la base de datos

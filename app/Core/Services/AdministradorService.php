@@ -21,6 +21,7 @@ use App\Models\ConductorModel;
 use App\Models\PagoModel;
 use App\Models\PersonaModel;
 use App\Models\SancionModel;
+use App\Models\VehiculoModel;
 use App\Models\ViajeModel;
 
 class AdministradorService
@@ -28,6 +29,10 @@ class AdministradorService
     public function getConductores()
     {
         return $conductores = ConductorModel::all();
+    }
+    public function getVehiculos(){
+        return $vehiculos = VehiculoModel::all();
+
     }
 
     public function getPasajeros()
